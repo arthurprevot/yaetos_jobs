@@ -27,7 +27,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r yaetos/scripts/requirements_alt.txt
+        pip install -r conf/requirements_alt.txt
         pip install yaetos
     # - name: Lint with flake8
     #   run: |
