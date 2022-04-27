@@ -3,15 +3,17 @@ USER root
 
 # Pip installs
 RUN apt-get update && apt-get install -y git
-RUN pip3 install --no-deps yaetos==0.9.3
+RUN pip3 install --no-deps yaetos==0.9.11
+# Force latest version to avoid using previous ones.
 RUN pip3 install -r /opt/bitnami/python/lib/python3.6/site-packages/yaetos/scripts/requirements_alt.txt
+# TODO: check to put all yaetos requirements in package def to avoid having to call it separately.
 # Uncomment 2 lines below to install extra packages. Requires creating a requirements_extra.txt in conf/ file. Using local copy to tmp dir to allow checkpointing this step (no re-installs as long as requirements.txt doesn't change)
 # COPY conf/requirements_extra.txt /tmp/requirements_extra.txt
 # RUN pip3 install -r /tmp/requirements_extra.txt
 
-
-# RUN mkdir -p tmp/files_to_ship/  # skipped, causes problems with permissions, whether run from root or jovyan user. Will need to be run manually once.
+# Setup environment variables
 ENV PYTHONPATH $SPARK_HOME/python:$SPARK_HOME/python/build:$PYTHONPATH
+ENV DEF_PATH_TMP /opt/bitnami/python/lib/python3.6/site-packages/
 
 # Expose ports for monitoring.
 # SparkContext web UI on 4040 -- only available for the duration of the application.

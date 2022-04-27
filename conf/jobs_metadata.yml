@@ -1,5 +1,6 @@
 # Jobs details below. Common job params listed at the bottom of this file.
 jobs:
+  # Here are sample jobs. They can be deleted if not needed.
   examples/ex0_extraction_job.py:
     api_inputs: {'path': 'https://raw.githubusercontent.com/wikimedia-research/Discovery-Hiring-Analyst-2016/master/events_log.csv.gz'}
     output: {'path':'{base_path}/wiki_example/input/{now}/', 'type':'csv'}
@@ -159,6 +160,8 @@ jobs:
     load_connectors: all
     enable_redshift_push: True
 
+  # wordcount_raw_job: #Job exists but doesn't rely on jobs_metadata entries
+
   examples/wordcount_frameworked_job.py:  # shows raw pyspark rdd ops in framework, same as wordcount_raw_job
     inputs:
       lines: {'path':"{base_path}/wordcount_example/input/sample_text.txt", 'type':'txt'}
@@ -167,8 +170,10 @@ jobs:
     frequency: 24h
     owners: ['some_email@address.com']
 
-  # wordcount_raw_job: #Job exists but doesn't rely on jobs_metadata entries
+  # Your jobs can be added here.
 
+
+# ----- Params -------
 common_params:
   all_mode_params:
     connection_file:  conf/connections.cfg
@@ -188,7 +193,7 @@ common_params:
       save_schemas: False
       manage_git_info: True
     dev_EMR:
-      base_path: s3://dev-spark2/yaetos  # don't add '/' at the end
+      base_path: s3://dev-spark  # don't add '/' at the end
       schema: sandbox
       emr_core_instances: 0
       aws_config_file:  conf/aws_config.cfg
