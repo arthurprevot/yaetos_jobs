@@ -170,7 +170,7 @@ jobs:
     frequency: 24h
     owners: ['some_email@address.com']
 
-  # Your jobs can be added here.
+  # Your jobs should be added here.
 
 
 # ----- Params -------
