@@ -1,6 +1,6 @@
 # Jobs details below. Common job params listed at the bottom of this file.
 jobs:
-  # Here are sample jobs. They can be deleted if not needed.
+  # Sample jobs added below. They can be deleted.
   examples/ex0_extraction_job.py:
     api_inputs: {'path': 'https://raw.githubusercontent.com/wikimedia-research/Discovery-Hiring-Analyst-2016/master/events_log.csv.gz'}
     output: {'path':'{base_path}/wiki_example/input/{now}/', 'type':'csv'}
