@@ -1,4 +1,4 @@
-from yaetos.sql_job import Job
+from jobs.examples.ex7_hybrid_pandas_spark_job import Job
 
 
 class Test_Job(object):
@@ -17,14 +17,11 @@ class Test_Job(object):
         ]))
 
         expected = [
-            {'session_id': 1234, 'count_events': 2},
-            {'session_id': 1235, 'count_events': 1},
+            {'session_id': '1234', 'count_events': 2},
+            {'session_id': '1235', 'count_events': 1},
+            # only diff with ex1_framework_job is session_id being str instead of int.
         ]
 
-        sql_file = 'jobs/examples/ex1_full_sql_job.sql'
-
         loaded_inputs = {'some_events': some_events, 'other_events': other_events}
-        pre_jargs = get_pre_jargs(loaded_inputs.keys())
-        pre_jargs['cmd_args']['sql_file'] = sql_file
-        actual = Job(pre_jargs=pre_jargs).etl_no_io(sc, sc_sql, loaded_inputs=loaded_inputs)[0].toPandas().to_dict(orient='records')
+        actual = Job(pre_jargs=get_pre_jargs(loaded_inputs.keys())).etl_no_io(sc, sc_sql, loaded_inputs=loaded_inputs)[0].toPandas().to_dict(orient='records')
         assert actual == expected

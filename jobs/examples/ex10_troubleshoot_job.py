@@ -1,13 +1,8 @@
+"""To show troubleshooting, done through 'import ipdb; ipdb.set_trace()'."""
 from yaetos.etl_utils import ETL_Base, Commandliner
-from sqlalchemy import types
 
 
 class Job(ETL_Base):
-    OUTPUT_TYPES = {
-        'session_id': types.VARCHAR(16),
-        'count_events': types.INT(),
-    }
-
     def transform(self, some_events, other_events):
         df = self.query("""
             SELECT se.session_id, count(*) as count_events
@@ -17,6 +12,9 @@ class Job(ETL_Base):
             group by se.session_id
             order by count(*) desc
             """)
+
+        import ipdb; ipdb.set_trace()  # will drop to python terminal here to inspect  # noqa: E702
+
         return df
 
 

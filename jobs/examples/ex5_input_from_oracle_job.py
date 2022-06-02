@@ -1,4 +1,4 @@
-from yaetos.etl_utils import ETL_Base, Commandliner, Cred_Ops_Dispatcher, pdf_to_sdf
+from yaetos.etl_utils import ETL_Base, Commandliner, Cred_Ops_Dispatcher
 from yaetos.db_utils import pdf_to_sdf
 from libs.python_db_connectors.query_oracle import query as query_oracle
 from sqlalchemy import types
@@ -9,7 +9,7 @@ class Job(ETL_Base):
     OUTPUT_TYPES = {
         'session_id': types.VARCHAR(16),
         'count_events': types.INT(),
-        }
+    }
 
     def transform(self):
         cred_profiles = Cred_Ops_Dispatcher().retrieve_secrets(self.jargs.storage)

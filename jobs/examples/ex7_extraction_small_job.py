@@ -1,11 +1,15 @@
+"""Job to get small version of wiki sample data, to speed up running downstream jobs, for testing purposes."""
 from yaetos.etl_utils import ETL_Base, Commandliner
+
+# TODO: move it to .sql job.
 
 
 class Job(ETL_Base):
-    def transform(self, some_events):
+    def transform(self, events):
         df = self.query("""
-            SELECT se.session_id, session_length, session_length*2 as doubled_length
-            FROM some_events se
+            SELECT *
+            FROM events
+            LIMIT 1000
             """)
         return df
 

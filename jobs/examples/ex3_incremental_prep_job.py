@@ -1,6 +1,6 @@
 from yaetos.etl_utils import ETL_Base, Commandliner
-from pyspark.sql.functions import udf, array
-from pyspark.sql.types import StringType, IntegerType
+from pyspark.sql.functions import udf
+from pyspark.sql.types import StringType
 from pyspark.sql.functions import col
 
 
@@ -11,7 +11,7 @@ class Job(ETL_Base):
 
         events_cleaned = some_events \
             .withColumn('timestamp_obj', udf_format_datetime(some_events.timestamp).cast("timestamp")) \
-            .where(col('timestamp').like("%2.016%") == False)
+            .where(col('timestamp').like("%2.016%") is False)
         return events_cleaned
 
     @staticmethod
@@ -27,5 +27,5 @@ class Job(ETL_Base):
 
 
 if __name__ == "__main__":
-    args = {'job_param_file':   'conf/jobs_metadata.yml'}
+    args = {'job_param_file': 'conf/jobs_metadata.yml'}
     Commandliner(Job, **args)
