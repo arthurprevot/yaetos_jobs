@@ -1,4 +1,4 @@
-name: Python application
+name: CI
 
 on: [push]
 
@@ -29,6 +29,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r conf/requirements_extra.txt
         pip install yaetos
+        pip install pandas  # TODO: remove when integrated pulling from 0.9.18
     # - name: Lint with flake8
     #   run: |
     #     pip install flake8
@@ -39,4 +40,6 @@ jobs:
     - name: Test with pytest
       run: |
         pip install pytest
+        export YAETOS_JOBS_HOME=/home/runner/work/yaetos_jobs
+        ENV PYTHONPATH $YAETOS_JOBS_HOME:$PYTHONPATH
         pytest
