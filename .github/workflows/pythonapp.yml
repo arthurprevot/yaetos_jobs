@@ -34,8 +34,8 @@ jobs:
     - name: Test with pytest
       run: |
         pip install pytest
-        export YAETOS_JOBS_HOME=/home/runner/work/yaetos_jobs/yaetos_jobs
-        export PYTHONPATH=$YAETOS_JOBS_HOME:$PYTHONPATH
+        export YAETOS_JOBS_HOME=/home/runner/work/yaetos_jobs/yaetos_jobs  # TODO: find cleaner way
+        export PYTHONPATH=$YAETOS_JOBS_HOME:$PYTHONPATH  # TODO: same
         pytest
     - name: Lint with flake8
       run: |
