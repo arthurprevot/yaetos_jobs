@@ -40,6 +40,6 @@ jobs:
     - name: Test with pytest
       run: |
         pip install pytest
-        export YAETOS_JOBS_HOME=/home/runner/work/yaetos_jobs
+        export YAETOS_JOBS_HOME=/home/runner/work/yaetos_jobs/yaetos_jobs
         export PYTHONPATH=$YAETOS_JOBS_HOME:$PYTHONPATH
         pytest
