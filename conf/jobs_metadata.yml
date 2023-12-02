@@ -294,19 +294,18 @@ jobs:
 
 
   # ----- Lead generation --------
-
   marketing/apollo_extraction_job.py:
-    description: "Extract apollo data from list of startup provided."
-    api_inputs: {'creds': 'apollo'}
+    description: "Extract apollo data from list of companies provided."
+    api_inputs: {'creds': 'apollo'}  # Creds to be added to conf/connections.cfg
     inputs:      
       companies: {'path':"./tests/fixtures/data_sample/companies/companies.csv", 'type':'csv', 'df_type':'pandas', 'read_kwargs':{'sep': ';'}}  # Example file to be replaced
     output: {'path':'{base_path}/apollo_p1_extraction/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas', 'save_kwargs':{'sep':';'}}
     spark_boot: False
 
   marketing/apollo_merge_job.py:
-    description: "Merge people from european tech database to apollo data."
+    description: "Merge company data with apollo extraction data."
     inputs:
-      companies: {'path':"./tests/fixtures/data_sample/companies/companies.csv", 'type':'csv', 'df_type':'pandas', 'read_kwargs':{'sep': ';'}}
+      companies: {'path':"./tests/fixtures/data_sample/companies/companies.csv", 'type':'csv', 'df_type':'pandas', 'read_kwargs':{'sep': ';'}}  # Example file to be replaced
       apollo: {'path':"{base_path}/apollo_p1_extraction/{latest}/dataset.csv", 'type':'csv', 'df_type':'pandas', 'read_kwargs':{'sep': ';'}}
     output: {'path':'{base_path}/apollo_p2_merged/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas', 'save_kwargs':{'sep':';'}}
     spark_boot: False
