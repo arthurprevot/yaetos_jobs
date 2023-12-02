@@ -295,22 +295,22 @@ jobs:
 
   # ----- Lead generation --------
 
-  marketing/lead_generation_p1/email_extraction_job.py:
+  marketing/apollo_extraction_job.py:
     description: "Extract apollo data from list of startup provided."
     api_inputs: {'creds': 'apollo'}
     inputs:      
       companies: {'path':"./tests/fixtures/data_sample/companies/companies.csv", 'type':'csv', 'df_type':'pandas', 'read_kwargs':{'sep': ';'}}  # Example file to be replaced
-    output: {'path':'{base_path}/lead_generation_p1/2_apollo_emails/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas', 'save_kwargs':{'sep':';'}}
+    output: {'path':'{base_path}/apollo_p1_extraction/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas', 'save_kwargs':{'sep':';'}}
     spark_boot: False
 
-  marketing/lead_generation_p1/email_merge_job.py:
+  marketing/apollo_merge_job.py:
     description: "Merge people from european tech database to apollo data."
     inputs:
       companies: {'path':"./tests/fixtures/data_sample/companies/companies.csv", 'type':'csv', 'df_type':'pandas', 'read_kwargs':{'sep': ';'}}
-      apollo: {'path':"{base_path}/lead_generation_p1/2_apollo_emails/{latest}/dataset.csv", 'type':'csv', 'df_type':'pandas', 'read_kwargs':{'sep': ';'}}
-    output: {'path':'{base_path}/lead_generation_p1/3_startups_to_contact/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas', 'save_kwargs':{'sep':';'}}
+      apollo: {'path':"{base_path}/apollo_p1_extraction/{latest}/dataset.csv", 'type':'csv', 'df_type':'pandas', 'read_kwargs':{'sep': ';'}}
+    output: {'path':'{base_path}/apollo_p2_merged/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas', 'save_kwargs':{'sep':';'}}
     spark_boot: False
-    dependencies: [marketing/lead_generation_p1/email_extraction_job.py]
+    dependencies: [marketing/apollo_extraction_job.py]
 
 # ----- Params -------
 common_params:
