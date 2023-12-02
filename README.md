@@ -12,7 +12,7 @@
 </div>
 
 # yaetos_jobs
-This repository consists of data pipelines using yeatos ([github.com/arthurprevot/yaetos](https://github.com/arthurprevot/yaetos)). Such as:
+This repository consists of data pipelines using yaetos ([github.com/arthurprevot/yaetos](https://github.com/arthurprevot/yaetos)). Such as:
  * Data pipelines to showcase Yaetos functionalities, using wikipedia data.
  * Data pipelines to pull information from Github contributors using Github API. 
 
