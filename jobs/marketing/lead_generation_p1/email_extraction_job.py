@@ -6,7 +6,7 @@ import time
 
 
 class Job(ETL_Base):
-    def transform(self, startups):
+    def transform(self, companies):
         creds = Cred_Ops_Dispatcher().retrieve_secrets(self.jargs.storage, aws_creds='yaetos/connections', local_creds=self.jargs.connection_file)
         token = creds.get(self.jargs.api_inputs['creds'], 'token')
         headers = {
@@ -16,7 +16,7 @@ class Job(ETL_Base):
 
         data = []
         key_out = ["employment_history", "organization"]
-        for ii, row in list(startups.iterrows()):
+        for ii, row in list(companies.iterrows()):
             url = f"https://api.apollo.io/v1/mixed_people/search"
             body = {
                 "api_key": token,
@@ -26,13 +26,13 @@ class Job(ETL_Base):
             }
             resp, data_blob = self.pull_1page(url, headers, body)
             if resp:
-                data_rows = [{key : val for key, val in sub.items() if key not in key_out} for sub in data_blob["people"]]
-                data_rows2 = []
-                for item in data_rows:
+                rows_in = [{key : val for key, val in sub.items() if key not in key_out} for sub in data_blob["people"]]
+                rows_out = []
+                for item in rows_in:
                     item["company_url"] = row["url"]
                     item["company_name"] = row["name"]
-                    data_rows2.append(item)
-                data += data_rows2
+                    rows_out.append(item)
+                data += rows_out
             self.logger.info(f"Finished pulling all repos in {row['name']}, row {ii}")
             time.sleep(5)  # i.e. 5 sec between requests for rate limiting
         apollo = pd.DataFrame(data)

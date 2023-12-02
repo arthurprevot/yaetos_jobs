@@ -299,7 +299,7 @@ jobs:
     description: "Extract apollo data from list of startup provided."
     api_inputs: {'creds': 'apollo'}
     inputs:      
-      startups: {'path':"./tests/fixtures/data_sample/companies/companies.csv", 'type':'csv', 'df_type':'pandas', 'read_kwargs':{'sep': ';'}}  # Example file to be replaced
+      companies: {'path':"./tests/fixtures/data_sample/companies/companies.csv", 'type':'csv', 'df_type':'pandas', 'read_kwargs':{'sep': ';'}}  # Example file to be replaced
     output: {'path':'{base_path}/lead_generation_p1/2_apollo_emails/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas', 'save_kwargs':{'sep':';'}}
     spark_boot: False
 
