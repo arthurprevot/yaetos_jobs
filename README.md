@@ -12,11 +12,8 @@
 </div>
 
 # yaetos_jobs
-This repository show examples of data pipelines using yeatos ([github.com/arthurprevot/yaetos](https://github.com/arthurprevot/yaetos)). It is based on the folder structure setup by executing:
-
-    pip install yaetos
-    yaetos setup --project_name=yaetos_jobs
-
-It contains additional example jobs not available in the original setup.
+This repository consists of data pipelines using yeatos ([github.com/arthurprevot/yaetos](https://github.com/arthurprevot/yaetos)). Such as:
+ * Data pipelines to showcase Yaetos functionalities, using wikipedia data.
+ * Data pipelines to pull information from Github contributors using Github API. 
 
 For more details, look at [github.com/arthurprevot/yaetos](https://github.com/arthurprevot/yaetos).
