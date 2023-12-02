@@ -305,7 +305,6 @@ jobs:
 
   marketing/lead_generation_p1/email_merge_job.py:
     description: "Merge people from european tech database to apollo data."
-    api_inputs: {'creds': 'apollo'}
     inputs:
       companies: {'path':"./tests/fixtures/data_sample/companies/companies.csv", 'type':'csv', 'df_type':'pandas', 'read_kwargs':{'sep': ';'}}
       apollo: {'path':"{base_path}/lead_generation_p1/2_apollo_emails/{latest}/dataset.csv", 'type':'csv', 'df_type':'pandas', 'read_kwargs':{'sep': ';'}}

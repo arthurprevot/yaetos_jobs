@@ -1,5 +1,4 @@
 from yaetos.etl_utils import ETL_Base, Commandliner
-# import pandas as pd
 
 
 class Job(ETL_Base):
