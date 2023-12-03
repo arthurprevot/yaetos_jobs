@@ -311,6 +311,15 @@ jobs:
     spark_boot: False
     dependencies: [marketing/apollo_extraction_job.py]
 
+  # ----- ChatGPT --------
+  marketing/chatgpt_extraction_job.py:
+    description: "Extract chatgpt data from list of companies provided."
+    api_inputs: {'creds': 'chatgpt'}
+    inputs:
+      companies: {'path':"./tests/fixtures/data_sample/companies/companies.csv", 'type':'csv', 'df_type':'pandas', 'read_kwargs':{'sep': ';'}}  # Example file to be replaced
+    output: {'path':'{base_path}/chatgpt_extraction/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas', 'save_kwargs':{'sep':';'}}
+    spark_boot: False
+
 # ----- Params -------
 common_params:
   all_mode_params:
