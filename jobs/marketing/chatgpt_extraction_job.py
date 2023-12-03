@@ -1,8 +1,6 @@
 from yaetos.etl_utils import ETL_Base, Commandliner
 from yaetos.env_dispatchers import Cred_Ops_Dispatcher
 import pandas as pd
-import numpy as np
-import requests
 import time
 from openai import OpenAI
 
@@ -24,13 +22,14 @@ class Job(ETL_Base):
                   messages=[
                     {"role": "system", "content": "You are a helpful assistant."},
                     {"role": "user", "content": chat_prompt},
-                ])
+                ]
+            )
 
             chatout = response.choices[0].message.content if response else ''
             self.logger.info(f"Finished pulling chatgpt data, with prompt {chat_prompt}, and output: {chatout}")
 
             data_row = {
-                'company_url': row["url"], 
+                'company_url': row["url"],
                 'company_name': row["name"],
                 "chatgpt_info": chatout,
             }

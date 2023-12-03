@@ -12,12 +12,12 @@ class Job(ETL_Base):
         headers = {
             'accept': "application/json",
             'Cache-Control': 'no-cache',
-            }
+        }
 
         data = []
         key_out = ["employment_history", "organization"]
         for ii, row in list(companies.iterrows()):
-            url = f"https://api.apollo.io/v1/mixed_people/search"
+            url = "https://api.apollo.io/v1/mixed_people/search"
             body = {
                 "api_key": token,
                 "q_organization_domains": row["url"],
@@ -26,7 +26,7 @@ class Job(ETL_Base):
             }
             resp, data_blob = self.pull_1page(url, headers, body)
             if resp:
-                rows_in = [{key : val for key, val in sub.items() if key not in key_out} for sub in data_blob["people"]]
+                rows_in = [{key: val for key, val in sub.items() if key not in key_out} for sub in data_blob["people"]]
                 rows_out = []
                 for item in rows_in:
                     item["company_url"] = row["url"]
@@ -37,7 +37,6 @@ class Job(ETL_Base):
             time.sleep(5)  # i.e. 5 sec between requests for rate limiting
         apollo = pd.DataFrame(data)
         return apollo
-
 
     def pull_1page(self, url, headers, body):
         try:
