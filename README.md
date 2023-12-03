@@ -13,7 +13,9 @@
 
 # yaetos_jobs
 This repository consists of data pipelines using yaetos ([github.com/arthurprevot/yaetos](https://github.com/arthurprevot/yaetos)). Such as:
- * Data pipelines to showcase Yaetos functionalities, using wikipedia data.
+ * Data pipelines to pull information out of ChatGPT programmatically.
+ * Data pipelines to pull information out of Apollo.io for a set of companies.
  * Data pipelines to pull information from Github contributors using Github API. 
+ * Data pipelines to showcase Yaetos functionalities, using wikipedia data.
 
 For more details, look at [github.com/arthurprevot/yaetos](https://github.com/arthurprevot/yaetos).
