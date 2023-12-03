@@ -292,6 +292,34 @@ jobs:
       linkedin: {'path':"./data_manual/linkedin/export/Connections_mod.csv", 'type':'csv'}
     output: {'path':'{base_path}/people/{now}/', 'type':'csv'}
 
+
+  # ----- Lead generation --------
+  marketing/apollo_extraction_job.py:
+    description: "Extract apollo data from list of companies provided."
+    api_inputs: {'creds': 'apollo'}  # Creds to be added to conf/connections.cfg
+    inputs:      
+      companies: {'path':"./tests/fixtures/data_sample/companies/companies.csv", 'type':'csv', 'df_type':'pandas', 'read_kwargs':{'sep': ';'}}  # Example file to be replaced
+    output: {'path':'{base_path}/apollo_p1_extraction/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas', 'save_kwargs':{'sep':';'}}
+    spark_boot: False
+
+  marketing/apollo_merge_job.py:
+    description: "Merge company data with apollo extraction data."
+    inputs:
+      companies: {'path':"./tests/fixtures/data_sample/companies/companies.csv", 'type':'csv', 'df_type':'pandas', 'read_kwargs':{'sep': ';'}}  # Example file to be replaced
+      apollo: {'path':"{base_path}/apollo_p1_extraction/{latest}/dataset.csv", 'type':'csv', 'df_type':'pandas', 'read_kwargs':{'sep': ';'}}
+    output: {'path':'{base_path}/apollo_p2_merged/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas', 'save_kwargs':{'sep':';'}}
+    spark_boot: False
+    dependencies: [marketing/apollo_extraction_job.py]
+
+  # ----- ChatGPT --------
+  marketing/chatgpt_extraction_job.py:
+    description: "Extract chatgpt data from list of companies provided."
+    api_inputs: {'creds': 'chatgpt'}
+    inputs:
+      companies: {'path':"./tests/fixtures/data_sample/companies/companies.csv", 'type':'csv', 'df_type':'pandas', 'read_kwargs':{'sep': ';'}}  # Example file to be replaced
+    output: {'path':'{base_path}/chatgpt_extraction/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas', 'save_kwargs':{'sep':';'}}
+    spark_boot: False
+
 # ----- Params -------
 common_params:
   all_mode_params:
