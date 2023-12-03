@@ -4,7 +4,6 @@ import pandas as pd
 import numpy as np
 import requests
 import time
-# import openai
 from openai import OpenAI
 
 
@@ -20,13 +19,23 @@ class Job(ETL_Base):
             chat_prompt = self.generate_prompt(company=row["name"] )
 
             # Doc: https://platform.openai.com/docs/api-reference/parameter-details?lang=python
-            response = client.completions.create(
-                model="text-davinci-003",
-                prompt= chat_prompt,
-                temperature=0.1,)
+            # response = client.completions.create(
+            #     # model="text-davinci-003",
+            #     model="gpt-3.5-turbo",
+            #     prompt= chat_prompt,
+            #     temperature=0.1,)
 
-            chatout = response.choices[0].text if response else ''
+            response = client.chat.completions.create(
+                # model="text-davinci-003",
+                model="gpt-3.5-turbo",
+                  messages=[
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": chat_prompt},
+                ])
 
+
+            # chatout = response.choices[0].text if response else ''
+            chatout = response.choices[0].message.content if response else ''
             self.logger.info(f"Finished pulling chatgpt data, with prompt {chat_prompt}, and output: {chatout}")
 
             data_row = {
@@ -43,7 +52,7 @@ class Job(ETL_Base):
     def generate_prompt(company):
         return f"""
             Can you tell me what you know about the company called '{company}'.
-            Put it in 1 sentence.
+            Put it in 300 characters.
             """
 
 
