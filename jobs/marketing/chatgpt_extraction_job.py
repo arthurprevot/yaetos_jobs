@@ -4,14 +4,15 @@ import pandas as pd
 import numpy as np
 import requests
 import time
-import openai
+# import openai
+from openai import OpenAI
 
 
 class Job(ETL_Base):
     def transform(self, companies):
         creds = Cred_Ops_Dispatcher().retrieve_secrets(self.jargs.storage, aws_creds='yaetos/connections', local_creds=self.jargs.connection_file)
         token = creds.get(self.jargs.api_inputs['creds'], 'token')
-        openai.api_key = token
+        client = OpenAI(api_key=token,)
 
         data = []
         for ii, row in list(companies.iterrows()):
@@ -19,17 +20,19 @@ class Job(ETL_Base):
             chat_prompt = self.generate_prompt(company=row["name"] )
 
             # Doc: https://platform.openai.com/docs/api-reference/parameter-details?lang=python
-            response = openai.Completion.create(
+            response = client.completions.create(
                 model="text-davinci-003",
                 prompt= chat_prompt,
-                temperature=0.1,
-            )
-            self.logger.info(f"Finished pulling chatgpt data, with prompt {chat_prompt}, and output: {response['choices'][0]['text'] if response else ''}")
+                temperature=0.1,)
+
+            chatout = response.choices[0].text if response else ''
+
+            self.logger.info(f"Finished pulling chatgpt data, with prompt {chat_prompt}, and output: {chatout}")
 
             data_row = {
                 'company_url': row["url"], 
                 'company_name': row["name"],
-                "similarity": response["choices"][0]["text"] if response else '',
+                "chatgpt_info": chatout,
             }
             data.append(data_row)
             time.sleep(0.3)  # wait in sec. openai rate limit unknown
