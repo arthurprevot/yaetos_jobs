@@ -15,12 +15,8 @@ class Job(ETL_Base):
 
         data = []
         for ii, row in list(companies.iterrows()):
-            #self.logger.info(f"About to pull email info for companie {row['url']}")
             self.logger.info(f"Checking company {row['name']}")
-            #import ipdb; ipdb.set_trace()
-            # if not (type(row["linkedin_url"]) == float and np.isnan(row["linkedin_url"])) :
             chat_prompt = self.generate_prompt(company=row["name"] )
-            # print(chat_prompt)
 
             # Doc: https://platform.openai.com/docs/api-reference/parameter-details?lang=python
             response = openai.Completion.create(
@@ -29,10 +25,7 @@ class Job(ETL_Base):
                 temperature=0.1,
             )
             self.logger.info(f"Finished pulling chatgpt data, with prompt {chat_prompt}, and output: {response['choices'][0]['text'] if response else ''}")
-            # else:
-            #     response = None
 
-            #import ipdb; ipdb.set_trace()
             data_row = {
                 'company_url': row["url"], 
                 'company_name': row["name"],
