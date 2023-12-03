@@ -43,7 +43,7 @@ class Job(ETL_Base):
             resp = requests.request("POST", url, headers=headers, json=body)
             data = resp.json()
             if isinstance(data, dict) and 'people' in data.keys() and isinstance(data['people'], list):
-                size = len(data['people'])  
+                size = len(data['people'])
             else:
                 size = None
             self.logger.info(f"Pulled data from {url}, size {size}")

@@ -14,12 +14,12 @@ class Job(ETL_Base):
         data = []
         for ii, row in list(companies.iterrows()):
             self.logger.info(f"Checking company {row['name']}")
-            chat_prompt = self.generate_prompt(company=row["name"] )
+            chat_prompt = self.generate_prompt(company=row["name"])
 
             # Doc: https://platform.openai.com/docs/api-reference/parameter-details?lang=python
             response = client.chat.completions.create(
                 model="gpt-3.5-turbo",
-                  messages=[
+                messages=[
                     {"role": "system", "content": "You are a helpful assistant."},
                     {"role": "user", "content": chat_prompt},
                 ]
