@@ -26,9 +26,6 @@ def transform_one_image(row):
     image_contours = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)  # Convert to BGR for coloring the contours
     cv2.drawContours(image_contours, contours, -1, (0, 255, 0), 1)  # Draw contours in green
 
-    # Convert image colors from BGR to RGB for displaying with matplotlib
-    image_contours_rgb = cv2.cvtColor(image_contours, cv2.COLOR_BGR2RGB)
-
     # Save the image with contours to a file and output the path
     output_path = row.file_dir_out + row.file_name
     cv2.imwrite(output_path, image_contours)
