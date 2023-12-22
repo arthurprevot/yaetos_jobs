@@ -1,0 +1,49 @@
+from yaetos.etl_utils import ETL_Base, Commandliner
+import pandas as pd
+import numpy as np
+# from matplotlib import pyplot as plt
+import cv2
+
+class Job(ETL_Base):
+    def transform(self, listing):
+        # import ipdb; ipdb.set_trace()
+        # listing.foreach(transform_one_image)
+        listing.rdd.repartition(5).map(transform_one_image).collect()
+        return listing
+
+def transform_one_image(row):
+    # 
+    
+    file_path = row.file_dir + row.file_name
+    print(f"--- Loading: {file_path}")
+
+    # Load the image from file
+    image = cv2.imread(file_path, 0)
+
+    # Apply GaussianBlur to reduce image noise if it is required
+    image_blur = cv2.GaussianBlur(image, (5, 5), 0)
+
+    # Convert to binary image through thresholding
+    _, image_thresh = cv2.threshold(image_blur, 50, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+
+    # Find contours from the binary image
+    contours, hierarchy = cv2.findContours(image_thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+    # Draw all contours on the original image
+    image_contours = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)  # Convert to BGR for coloring the contours
+    cv2.drawContours(image_contours, contours, -1, (0, 255, 0), 1)  # Draw contours in green
+
+    # Convert image colors from BGR to RGB for displaying with matplotlib
+    image_contours_rgb = cv2.cvtColor(image_contours, cv2.COLOR_BGR2RGB)
+
+    # Save the image with contours to a file and output the path
+    output_path = row.file_dir_out + row.file_name
+    cv2.imwrite(output_path, image_contours)
+
+    return True
+
+
+
+if __name__ == "__main__":
+    args = {'job_param_file': 'conf/jobs_metadata.yml'}
+    Commandliner(Job, **args)
