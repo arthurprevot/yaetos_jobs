@@ -1,21 +1,14 @@
 from yaetos.etl_utils import ETL_Base, Commandliner
-import pandas as pd
-import numpy as np
-# from matplotlib import pyplot as plt
 import cv2
 
 class Job(ETL_Base):
     def transform(self, listing):
-        # import ipdb; ipdb.set_trace()
-        # listing.foreach(transform_one_image)
-        listing.rdd.repartition(5).map(transform_one_image).collect()
+        listing.foreach(transform_one_image)
         return listing
 
 def transform_one_image(row):
-    # 
-    
     file_path = row.file_dir + row.file_name
-    print(f"--- Loading: {file_path}")
+    print(f"->Loading: {file_path}")
 
     # Load the image from file
     image = cv2.imread(file_path, 0)
@@ -39,9 +32,7 @@ def transform_one_image(row):
     # Save the image with contours to a file and output the path
     output_path = row.file_dir_out + row.file_name
     cv2.imwrite(output_path, image_contours)
-
     return True
-
 
 
 if __name__ == "__main__":
