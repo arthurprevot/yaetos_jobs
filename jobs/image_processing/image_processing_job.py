@@ -1,10 +1,12 @@
 from yaetos.etl_utils import ETL_Base, Commandliner
 import cv2
 
+
 class Job(ETL_Base):
     def transform(self, listing):
         listing.foreach(transform_one_image)
         return listing
+
 
 def transform_one_image(row):
     file_path = row.file_dir + row.file_name
