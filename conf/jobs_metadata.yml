@@ -320,6 +320,15 @@ jobs:
     output: {'path':'{base_path}/chatgpt_extraction/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas', 'save_kwargs':{'sep':';'}}
     spark_boot: False
 
+  # ----- Image processing --------
+  image_processing/image_processing_job.py:
+    description: "Will perform contour detection in images. Will pickup and drop the images in the same folder as the listing file."
+    inputs:
+      #listing: {'path':"{base_path}/images_processing/1_raw/listing.csv", 'type':'csv'}
+      listing: {'path':"./tests/fixtures/data_sample/images/listing.csv", 'type':'csv'}  # Example file to be replaced
+    output: {'path':'{base_path}/images_processing/2_processed/listing/{now}/', 'type':'csv'}
+
+
 # ----- Params -------
 common_params:
   all_mode_params:

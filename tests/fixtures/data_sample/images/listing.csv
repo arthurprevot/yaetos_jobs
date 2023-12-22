@@ -1,0 +1,5 @@
+#,file_dir,file_name,file_dir_out, comments
+0,./tests/fixtures/data_sample/images/,image1_monalisa.jpg,./data/images_processing/2_processed/,
+1,./tests/fixtures/data_sample/images/,image2_vazareli.jpeg,./data/images_processing/2_processed/,
+2,./tests/fixtures/data_sample/images/,image3_lunch_atop_skyscraper.jpg,./data/images_processing/2_processed/,
+3,./tests/fixtures/data_sample/images/,image4_vday_ny.jpg,./data/images_processing/2_processed/,
