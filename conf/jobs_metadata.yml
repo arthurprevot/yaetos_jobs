@@ -331,8 +331,8 @@ jobs:
     description: "Will finetune an existing language model (ALBERT) to performe classification tasks, i.e. transfer learning."
     inputs:
       training_set: {'path':"./tests/fixtures/data_sample/images/listing.csv", 'type':'csv', 'df_type':'pandas'}  # Example file to be replaced
-    output: {'path':'{base_path}/gen_ai/retrain_albert/tests/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
-    output_model: {'path':'{base_path}/gen_ai/retrain_albert/model/{now}/'}
+    output: {'path':'{base_path}/gen_ai/finetuned_albert/tests/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
+    output_model: {'path':'{base_path}/gen_ai/finetuned_albert/model/{now}/'}
     spark_boot: False
 
 
