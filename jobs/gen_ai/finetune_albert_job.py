@@ -1,5 +1,4 @@
 from yaetos.etl_utils import ETL_Base, Commandliner, Path_Handler
-
 from transformers import AlbertTokenizer, TFAlbertForSequenceClassification
 from transformers import InputExample, InputFeatures
 from transformers import file_utils
@@ -17,17 +16,14 @@ class Job(ETL_Base):
         x_train, y_train = self.get_training_data()
         x_train = self.preprocess(x_train)
         model = self.finetune_model(x_train, y_train)
-        # path = './data/gen_ai/fine_tuned_albert'
-        # import ipdb; ipdb.set_trace() 
         path = Path_Handler(self.jargs.output_model['path'], self.jargs.base_path, self.jargs.merged_args.get('root_path')).expand_now(now_dt=self.start_dt)
-        # self.save_model(model, path)
+        self.save_model(model, path)
 
         # path = self.jargs.output_model['path'].replace('{now}/', '{latest}/')
         # path = Path_Handler(path, self.jargs.base_path, self.jargs.merged_args.get('root_path')).expand_later()
         # model = self.reload(path)
 
         evaluations = self.evaluate(model)
-        # import ipdb; ipdb.set_trace() 
         return evaluations
 
     def get_training_data(self):
@@ -38,23 +34,13 @@ class Job(ETL_Base):
 
     def preprocess(self, texts):
         tokenizer = AlbertTokenizer.from_pretrained(self.MODEL_NAME)
-
-        # Tokenize the texts
         encoded_inputs = tokenizer(texts, padding=True, truncation=True, max_length=128, return_tensors="tf")
-        # input_ids = encoded_inputs['input_ids']
-        # attention_masks = encoded_inputs['attention_mask']
         x = [encoded_inputs['input_ids'], encoded_inputs['attention_mask']]
         return x
-
 
     def finetune_model(self, x_train, y_train):
         # Load model
         model = TFAlbertForSequenceClassification.from_pretrained(self.MODEL_NAME)
-
-        # # Sample training data (texts and labels)
-        # texts = ["Sample text 1", "Sample text 2"]
-        # labels = [0, 1]  # Corresponding labels for the texts
-
 
         # Convert labels to a TensorFlow tensor
         y_train = tf.constant(y_train)
@@ -78,14 +64,12 @@ class Job(ETL_Base):
 
     def predict(self, model, x):
         predictions = model.predict(x)
-        # The predictions are in logits (raw scores), so you might want to apply a softmax to convert them to probabilities
+        # The predictions are in logits (raw scores), so we apply a softmax to convert them to probabilities
         probabilities = tf.nn.softmax(predictions.logits, axis=-1).numpy()
 
-        # Process the probabilities as needed
-        # For example, you could take the argmax to get the most likely class
+        # Take the argmax to get the most likely class
         predicted_classes = np.argmax(probabilities, axis=-1)
         return predicted_classes
-    
 
     def evaluate(self, model):
         tests = ["Sample text 1",
@@ -94,7 +78,6 @@ class Job(ETL_Base):
         x = self.preprocess(tests)
         predictions = self.predict(model, x)
         return pd.DataFrame({'tests': tests, 'predictions': predictions})
-
 
 
 if __name__ == "__main__":
