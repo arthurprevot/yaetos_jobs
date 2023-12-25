@@ -12,7 +12,7 @@ class Job(ETL_Base):
     def transform(self, training_set):
         print(file_utils.default_cache_path)
 
-        x_train, y_train = self.get_training_data()
+        x_train, y_train, x_test, y_test = self.split_training_data(training_set, 0.8)
         x_train = self.preprocess(x_train)
         model = self.finetune_model(x_train, y_train)
         path = Path_Handler(self.jargs.output_model['path'], self.jargs.base_path, self.jargs.merged_args.get('root_path')).expand_now(now_dt=self.start_dt)
@@ -22,14 +22,21 @@ class Job(ETL_Base):
         # path = Path_Handler(path, self.jargs.base_path, self.jargs.merged_args.get('root_path')).expand_later()
         # model = self.reload_model(path)
 
-        evaluations = self.evaluate(model)
+        evaluations = self.evaluate(model, x_test, y_test)
         return evaluations
 
-    def get_training_data(self):
-        # Sample training data (texts and labels)
-        texts = ["Sample text 1", "Sample text 2"]
-        labels = [0, 1]  # Corresponding labels for the texts
-        return texts, labels
+    def split_training_data(self, df, split):
+        # # Sample training data (texts and labels)
+        # texts = ["Sample text 1", "Sample text 2"]
+        # labels = [0, 1]  # Corresponding labels for the texts
+        np.random.seed(42)
+        df['training_test'] = np.random.choice(['training', 'test'], size=len(df), p=[split, 1-split])
+        x_train = df[df['training_test'] == 'training']['text'].tolist()
+        y_train = df[df['training_test'] == 'training']['classification'].tolist()
+        x_test = df[df['training_test'] == 'test']['text'].tolist()
+        y_test = df[df['training_test'] == 'test']['classification'].tolist()
+        # import ipdb; ipdb.set_trace()
+        return x_train, y_train, x_test, y_test
 
     def preprocess(self, texts):
         tokenizer = AlbertTokenizer.from_pretrained(self.MODEL_NAME)
@@ -70,13 +77,13 @@ class Job(ETL_Base):
         predicted_classes = np.argmax(probabilities, axis=-1)
         return predicted_classes
 
-    def evaluate(self, model):
-        tests = ["Sample text 1",
-                 "Sample text 2",
-                 "other"]
-        x = self.preprocess(tests)
+    def evaluate(self, model, x_test, y_test):
+        # tests = ["Sample text 1",
+        #          "Sample text 2",
+        #          "other"]
+        x = self.preprocess(x_test)
         predictions = self.predict(model, x)
-        return pd.DataFrame({'tests': tests, 'predictions': predictions})
+        return pd.DataFrame({'tests': x_test, 'predictions': predictions, 'real': y_test})
 
 
 if __name__ == "__main__":
