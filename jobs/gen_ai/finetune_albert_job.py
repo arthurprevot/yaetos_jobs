@@ -23,7 +23,7 @@ class Job(ETL_Base):
 
     def split_training_data(self, df, split):
         np.random.seed(42)
-        df['training_test'] = np.random.choice(['training', 'test'], size=len(df), p=[split, 1-split])
+        df['training_test'] = np.random.choice(['training', 'test'], size=len(df), p=[split, 1 - split])
         x_train = df[df['training_test'] == 'training']['text'].tolist()
         y_train = df[df['training_test'] == 'training']['classification'].tolist()
         x_test = df[df['training_test'] == 'test']['text'].tolist()
