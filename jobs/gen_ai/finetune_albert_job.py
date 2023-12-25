@@ -26,16 +26,12 @@ class Job(ETL_Base):
         return evaluations
 
     def split_training_data(self, df, split):
-        # # Sample training data (texts and labels)
-        # texts = ["Sample text 1", "Sample text 2"]
-        # labels = [0, 1]  # Corresponding labels for the texts
         np.random.seed(42)
         df['training_test'] = np.random.choice(['training', 'test'], size=len(df), p=[split, 1-split])
         x_train = df[df['training_test'] == 'training']['text'].tolist()
         y_train = df[df['training_test'] == 'training']['classification'].tolist()
         x_test = df[df['training_test'] == 'test']['text'].tolist()
         y_test = df[df['training_test'] == 'test']['classification'].tolist()
-        # import ipdb; ipdb.set_trace()
         return x_train, y_train, x_test, y_test
 
     def preprocess(self, texts):
@@ -78,11 +74,8 @@ class Job(ETL_Base):
         return predicted_classes
 
     def evaluate(self, model, x_test, y_test):
-        # tests = ["Sample text 1",
-        #          "Sample text 2",
-        #          "other"]
-        x = self.preprocess(x_test)
-        predictions = self.predict(model, x)
+        x_proc = self.preprocess(x_test)
+        predictions = self.predict(model, x_proc)
         return pd.DataFrame({'tests': x_test, 'predictions': predictions, 'real': y_test})
 
 
