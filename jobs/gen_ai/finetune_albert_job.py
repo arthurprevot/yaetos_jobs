@@ -18,10 +18,6 @@ class Job(ETL_Base):
         path = Path_Handler(self.jargs.output_model['path'], self.jargs.base_path, self.jargs.merged_args.get('root_path')).expand_now(now_dt=self.start_dt)
         self.save_model(model, path)
 
-        # path = self.jargs.output_model['path'].replace('{now}/', '{latest}/')
-        # path = Path_Handler(path, self.jargs.base_path, self.jargs.merged_args.get('root_path')).expand_later()
-        # model = self.reload_model(path)
-
         evaluations = self.evaluate(model, x_test, y_test)
         return evaluations
 
@@ -59,10 +55,10 @@ class Job(ETL_Base):
         return model
 
     def save_model(self, model, path):
-        model.save(path)
+        model.save_pretrained(path)
 
     def reload_model(self, path):
-        return tf.keras.models.load_model(path)
+        return TFAlbertForSequenceClassification.from_pretrained(path)
 
     def predict(self, model, x):
         predictions = model.predict(x)
@@ -77,6 +73,16 @@ class Job(ETL_Base):
         x_proc = self.preprocess(x_test)
         predictions = self.predict(model, x_proc)
         return pd.DataFrame({'tests': x_test, 'predictions': predictions, 'real': y_test})
+
+    def transform_dev(self, training_set):
+        "Only for dev, to reload model from local, to avoid retraining it everytime"
+        path = self.jargs.output_model['path'].replace('{now}/', '{latest}/')
+        path = Path_Handler(path, self.jargs.base_path, self.jargs.merged_args.get('root_path')).expand_later()
+        model = self.reload_model(path)
+
+        x_train, y_train, x_test, y_test = self.split_training_data(training_set, 0.8)
+        evaluations = self.evaluate(model, x_test, y_test)
+        return evaluations
 
 
 if __name__ == "__main__":
