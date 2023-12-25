@@ -1,6 +1,5 @@
 from yaetos.etl_utils import ETL_Base, Commandliner, Path_Handler
 from transformers import AlbertTokenizer, TFAlbertForSequenceClassification
-from transformers import InputExample, InputFeatures
 from transformers import file_utils
 import tensorflow as tf
 import numpy as np
@@ -8,7 +7,7 @@ import pandas as pd
 
 
 class Job(ETL_Base):
-    MODEL_NAME = 'albert-base-v2' # or other version of ALBERT
+    MODEL_NAME = 'albert-base-v2'  # or other version of ALBERT
 
     def transform(self, training_set):
         print(file_utils.default_cache_path)
@@ -21,7 +20,7 @@ class Job(ETL_Base):
 
         # path = self.jargs.output_model['path'].replace('{now}/', '{latest}/')
         # path = Path_Handler(path, self.jargs.base_path, self.jargs.merged_args.get('root_path')).expand_later()
-        # model = self.reload(path)
+        # model = self.reload_model(path)
 
         evaluations = self.evaluate(model)
         return evaluations
