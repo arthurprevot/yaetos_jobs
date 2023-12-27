@@ -3,6 +3,7 @@ import tensorflow as tf
 import pandas as pd
 from albert_finetune_job import Job as job_af
 
+
 class Job(ETL_Base):
 
     def transform(self, text_to_classify):
@@ -23,7 +24,7 @@ class Job(ETL_Base):
         texts_proc = job_af.preprocess(texts)
         predictions = job_af.predict(model, texts_proc)
         return pd.DataFrame({'texts': texts, 'predictions': predictions})
-    
+
 
 if __name__ == "__main__":
     args = {'job_param_file': 'conf/jobs_metadata.yml'}

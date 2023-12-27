@@ -94,7 +94,7 @@ class Job(ETL_Base):
         df_train = pd.DataFrame({'text': x_train, 'predictions': predictions, 'real': y_train})
         df_train['train_or_test'] = 'train'
 
-        return pd.concat([df_test, df_train])    
+        return pd.concat([df_test, df_train])
 
 
 if __name__ == "__main__":
