@@ -16,8 +16,8 @@ class Job(ETL_Base):
         path = Path_Handler(path, self.jargs.base_path, self.jargs.merged_args.get('root_path')).expand_later()
         model = job_af.reload_model(path)
 
-        evaluations = self.predict_all(model, text_to_classify)
-        return evaluations
+        predictions = self.predict_all(model, text_to_classify)
+        return predictions
 
     def predict_all(self, model, text_to_classify):
         texts = text_to_classify['text'].tolist()
