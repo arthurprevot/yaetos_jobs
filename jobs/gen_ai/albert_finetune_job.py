@@ -18,7 +18,7 @@ class Job(ETL_Base):
         self.logger.info(f"Tensorflow devices: {tf.config.list_physical_devices()}")
 
         x_train, y_train, x_test, y_test = self.split_training_data(training_set, 0.8)
-        x_train_proc = self.preprocess(x_train, self.MODEL_NAME)
+        x_train_proc = self.preprocess(x_train)
         model = self.finetune_model(x_train_proc, y_train)
         path = Path_Handler(self.jargs.output_model['path'], self.jargs.base_path, self.jargs.merged_args.get('root_path')).expand_now(now_dt=self.start_dt)
         self.save_model(model, path)
@@ -38,9 +38,9 @@ class Job(ETL_Base):
         y_test = df[df['training_test'] == 'test']['classification'].tolist()
         return x_train, y_train, x_test, y_test
 
-    @staticmethod
-    def preprocess(texts, modelname):
-        tokenizer = AlbertTokenizer.from_pretrained(modelname)
+    @classmethod
+    def preprocess(cls, texts):
+        tokenizer = AlbertTokenizer.from_pretrained(cls.MODEL_NAME)
         encoded_inputs = tokenizer(texts, padding=True, truncation=True, max_length=128, return_tensors="tf")
         x = [encoded_inputs['input_ids'], encoded_inputs['attention_mask']]
         return x
@@ -84,12 +84,12 @@ class Job(ETL_Base):
         return predicted_classes
 
     def evaluate(self, model, x_test, y_test, x_train, y_train):
-        x_proc = self.preprocess(x_test, self.MODEL_NAME)
+        x_proc = self.preprocess(x_test)
         predictions = self.predict(model, x_proc)
         df_test = pd.DataFrame({'text': x_test, 'predictions': predictions, 'real': y_test})
         df_test['train_or_test'] = 'test'
 
-        x_proc = self.preprocess(x_train, self.MODEL_NAME)
+        x_proc = self.preprocess(x_train)
         predictions = self.predict(model, x_proc)
         df_train = pd.DataFrame({'text': x_train, 'predictions': predictions, 'real': y_train})
         df_train['train_or_test'] = 'train'

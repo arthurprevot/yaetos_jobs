@@ -20,7 +20,7 @@ class Job(ETL_Base):
 
     def predict_all(self, model, text_to_classify):
         texts = text_to_classify['text'].tolist()
-        texts_proc = job_af.preprocess(texts, job_af.MODEL_NAME)
+        texts_proc = job_af.preprocess(texts)
         predictions = job_af.predict(model, texts_proc)
         return pd.DataFrame({'texts': texts, 'predictions': predictions})
     
