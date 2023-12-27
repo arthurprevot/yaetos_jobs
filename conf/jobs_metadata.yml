@@ -327,7 +327,7 @@ jobs:
     output: {'path':'{base_path}/images_processing/2_processed/listing/{now}/', 'type':'csv'}
 
   # ----- AI & Gen AI --------
-  gen_ai/finetune_albert_job.py:
+  gen_ai/albert_finetune_job.py:
     description: "Finetune an existing language model (ALBERT) to perform classification tasks."
     inputs:
       training_set: {'path':"./tests/fixtures/data_sample/gen_ai/text_classification.csv", 'type':'csv', 'df_type':'pandas'}  # Example file to be replaced

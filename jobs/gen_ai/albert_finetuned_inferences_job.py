@@ -3,7 +3,7 @@ from yaetos.etl_utils import ETL_Base, Commandliner, Path_Handler
 import tensorflow as tf
 # import numpy as np
 import pandas as pd
-from finetune_albert_job import Job as job_af
+from albert_finetune_job import Job as job_af
 
 class Job(ETL_Base):
 
