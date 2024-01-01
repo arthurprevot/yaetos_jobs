@@ -1,5 +1,4 @@
 from yaetos.etl_utils import ETL_Base, Commandliner
-from yaetos.env_dispatchers import Cred_Ops_Dispatcher
 import pandas as pd
 import numpy as np
 
@@ -14,6 +13,7 @@ class Job(ETL_Base):
         result_df = df.drop('Emissions_post', axis=1).join(dict_df)
         return result_df
 
+
 def map_emissions(years_list):
     rows = []
     for years_dict in years_list:
@@ -25,8 +25,9 @@ def map_emissions(years_list):
                     row['item'] = ii
                     rows.append(row)
             elif year_emission_list is not None:
-                raise('Should not get here', type(year_emission_list), year_emission_list)
+                raise Exception(f'Should not get here, var type {type(year_emission_list)}, year_emission_list: {year_emission_list}')
     return rows
+
 
 if __name__ == "__main__":
     args = {'job_param_file': 'conf/jobs_metadata.yml'}

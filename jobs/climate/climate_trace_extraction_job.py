@@ -1,3 +1,7 @@
+"""
+More details about the data ingested at https://climatetrace.org/
+Details about the API: https://api.climatetrace.org/v4/swagger/index.html
+"""
 from yaetos.etl_utils import ETL_Base, Commandliner
 import pandas as pd
 import requests
@@ -34,7 +38,7 @@ class Job(ETL_Base):
             assets = []
             self.logger.info(f"Couldn't pull data from {url} with error: {ex}")
 
-        return [asset | {'page':offset} for asset in assets]
+        return [asset | {'page': offset} for asset in assets]
 
 
 if __name__ == "__main__":

@@ -344,14 +344,15 @@ jobs:
     dependencies: [gen_ai/albert_finetune_job.py]
     spark_boot: False
 
+
+  # ----- Climate data (Carbon emissions) Jobs --------
   climate/climate_trace_extraction_job.py:
-    description: "Ingest climate trace data."
-    # output: {'path':'{base_path}/climate_trace/raw/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
+    description: "Ingest climate trace data. From https://climatetrace.org/."
     output: {'path':'{base_path}/climate_trace/raw/{now}/dataset.parquet', 'type':'parquet', 'df_type':'pandas'}
     spark_boot: False
 
   climate/climate_trace_emission_fact_job.py:
-    description: "Process ingested climate trace data to have."
+    description: "Get yearly emission data from asset and emission type in climate trace data."
     inputs:
       climate_trace: {'path':"{base_path}/climate_trace/raw/{latest}/dataset.parquet", 'type':'parquet', 'df_type':'pandas'}
     output: {'path':'{base_path}/climate_trace/emission_facts/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
