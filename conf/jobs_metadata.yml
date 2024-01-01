@@ -346,7 +346,18 @@ jobs:
 
   climate/climate_trace_extraction_job.py:
     description: "Ingest climate trace data."
-    output: {'path':'{base_path}/climate_trace/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
+    # output: {'path':'{base_path}/climate_trace/raw/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
+    output: {'path':'{base_path}/climate_trace/raw/{now}/dataset.parquet', 'type':'parquet', 'df_type':'pandas'}
+    spark_boot: False
+
+  climate/climate_trace_emission_fact_job.py:
+    description: "Process ingested climate trace data to have."
+    inputs:
+      climate_trace: {'path':"{base_path}/climate_trace/raw/{latest}/dataset.parquet", 'type':'parquet', 'df_type':'pandas'}
+    output: {'path':'{base_path}/climate_trace/emission_facts/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
+    spark_boot: False
+    dependencies: [climate/climate_trace_extraction_job.py]
+
     spark_boot: False
 
 
