@@ -18,25 +18,15 @@ class Job(ETL_Base):
         url = "https://api.climatetrace.org/v4/assets"
         args = '?'
         args += f'countries={countries}&' if countries else ''
-        # args += 'sectors=waste&'
-        # args += 'sectors=cropland-fires&'
-        # args += 'subsectors=aluminum&'
-        # args += 'year=2021&'
         args += f'limit={limit}&' if limit else ''
         args += f'offset={offset}&' if offset else ''
+        # Note: tested sectors, subsectors and year params but they don't seem to work
         url += args
-        # self.logger.info(f"Pulling all assets row {url}")
-        # response = requests.get(url)
-        # data = response.json()
         try:
             resp = requests.get(url)
             data = resp.json()
             assets = data['assets']
-
-            if isinstance(data, dict) and 'assets' in data.keys() and isinstance(data['assets'], list):
-                size = len(data['assets'])
-            else:
-                size = None
+            size = len(assets) if isinstance(assets, list) else None
             self.logger.info(f"Pulled data from {url}, size {size}")
         except Exception as ex:
             resp = None
@@ -44,29 +34,14 @@ class Job(ETL_Base):
             assets = []
             self.logger.info(f"Couldn't pull data from {url} with error: {ex}")
 
-        rows = []
-        for asset in assets:
-            # fields = asset.keys()
-            row = {key: asset[key] for key in asset.keys()}
-            rows.append(row)
+        # rows = []
+        # for asset in assets:
+        #     # fields = asset.keys()
+        #     row = {key: asset[key] for key in asset.keys()}
+        #     rows.append(row)
 
-        return rows
-        # return assets
-
-    # def pull_1page(self, url, headers, body):
-    #     try:
-    #         resp = requests.request("POST", url, headers=headers, json=body)
-    #         data = resp.json()
-    #         if isinstance(data, dict) and 'people' in data.keys() and isinstance(data['people'], list):
-    #             size = len(data['people'])
-    #         else:
-    #             size = None
-    #         self.logger.info(f"Pulled data from {url}, size {size}")
-    #     except Exception as ex:
-    #         resp = None
-    #         data = None
-    #         self.logger.info(f"Couldn't pull data from {url} with error: {ex}")
-    #     return resp, data
+        # return rows
+        return [asset | {'page':offset} for asset in assets]
 
 
 if __name__ == "__main__":
