@@ -344,6 +344,11 @@ jobs:
     dependencies: [gen_ai/albert_finetune_job.py]
     spark_boot: False
 
+  climate/climate_trace_extraction_job.py:
+    description: "Ingest climate trace data."
+    output: {'path':'{base_path}/climate_trace/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
+    spark_boot: False
+
 
 
 # ----- Params -------
