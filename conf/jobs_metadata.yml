@@ -326,13 +326,22 @@ jobs:
       listing: {'path':"./tests/fixtures/data_sample/images/listing.csv", 'type':'csv'}  # Example file to be replaced
     output: {'path':'{base_path}/images_processing/2_processed/listing/{now}/', 'type':'csv'}
 
-  # ----- Gen AI --------
-  gen_ai/finetune_albert_job.py:
+  # ----- AI & Gen AI --------
+  gen_ai/albert_finetune_job.py:
     description: "Finetune an existing language model (ALBERT) to perform classification tasks."
     inputs:
       training_set: {'path':"./tests/fixtures/data_sample/gen_ai/text_classification.csv", 'type':'csv', 'df_type':'pandas'}  # Example file to be replaced
     output: {'path':'{base_path}/gen_ai/finetuned_albert/tests/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
     output_model: {'path':'{base_path}/gen_ai/finetuned_albert/model/{now}/'}
+    spark_boot: False
+
+  gen_ai/albert_finetuned_inferences_job.py:
+    description: "Run classification job. Depends on model and code from job albert_finetune_job.py."
+    input_model: {'path':'{base_path}/gen_ai/finetuned_albert/model/{latest}/'}
+    inputs:
+      text_to_classify: {'path':"./tests/fixtures/data_sample/gen_ai/text_classification.csv", 'type':'csv', 'df_type':'pandas'}  # Example file to be replaced. This one has labels too but it doesn't have to.
+    output: {'path':'{base_path}/gen_ai/finetuned_albert/classified/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
+    dependencies: [gen_ai/albert_finetune_job.py]
     spark_boot: False
 
 

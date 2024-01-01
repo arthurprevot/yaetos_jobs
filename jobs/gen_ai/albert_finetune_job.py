@@ -10,15 +10,23 @@ class Job(ETL_Base):
     MODEL_NAME = 'albert-base-v2'  # or other version of ALBERT
 
     def transform(self, training_set):
-        print(file_utils.default_cache_path)
+        # Force TensorFlow to use the CPU
+        tf.config.set_visible_devices([], 'GPU')
+
+        self.logger.info(f"Location of huggingface cache model {file_utils.default_cache_path}")
+        self.logger.info(f"Tensorflow is_gpu_available: {tf.test.is_gpu_available()}")
+        self.logger.info(f"Tensorflow devices: {tf.config.list_physical_devices()}")
 
         x_train, y_train, x_test, y_test = self.split_training_data(training_set, 0.8)
-        x_train = self.preprocess(x_train)
-        model = self.finetune_model(x_train, y_train)
+        x_train_proc = self.preprocess(x_train)
+        model = self.finetune_model(x_train_proc, y_train)
         path = Path_Handler(self.jargs.output_model['path'], self.jargs.base_path, self.jargs.merged_args.get('root_path')).expand_now(now_dt=self.start_dt)
         self.save_model(model, path)
 
-        evaluations = self.evaluate(model, x_test, y_test)
+        evaluations = self.evaluate(model, x_test, y_test, x_train, y_train)
+
+        # Generate a plot of the model's architecture
+        tf.keras.utils.plot_model(model, to_file='model_architecture.png', show_shapes=True)
         return evaluations
 
     def split_training_data(self, df, split):
@@ -30,8 +38,9 @@ class Job(ETL_Base):
         y_test = df[df['training_test'] == 'test']['classification'].tolist()
         return x_train, y_train, x_test, y_test
 
-    def preprocess(self, texts):
-        tokenizer = AlbertTokenizer.from_pretrained(self.MODEL_NAME)
+    @classmethod
+    def preprocess(cls, texts):
+        tokenizer = AlbertTokenizer.from_pretrained(cls.MODEL_NAME)
         encoded_inputs = tokenizer(texts, padding=True, truncation=True, max_length=128, return_tensors="tf")
         x = [encoded_inputs['input_ids'], encoded_inputs['attention_mask']]
         return x
@@ -51,16 +60,21 @@ class Job(ETL_Base):
         model.compile(optimizer=optimizer, loss=loss_function, metrics=['accuracy'])
 
         # Train the model
-        model.fit(x=x_train, y=y_train, batch_size=8, epochs=3)
+        model.fit(x=x_train, y=y_train, batch_size=8, epochs=10)
+        self.logger.info(f"Model summary, post finetuning: {model.summary()}")
+
         return model
 
-    def save_model(self, model, path):
+    @staticmethod
+    def save_model(model, path):
         model.save_pretrained(path)
 
-    def reload_model(self, path):
+    @staticmethod
+    def reload_model(path):
         return TFAlbertForSequenceClassification.from_pretrained(path)
 
-    def predict(self, model, x):
+    @staticmethod
+    def predict(model, x):
         predictions = model.predict(x)
         # The predictions are in logits (raw scores), so we apply a softmax to convert them to probabilities
         probabilities = tf.nn.softmax(predictions.logits, axis=-1).numpy()
@@ -69,20 +83,18 @@ class Job(ETL_Base):
         predicted_classes = np.argmax(probabilities, axis=-1)
         return predicted_classes
 
-    def evaluate(self, model, x_test, y_test):
+    def evaluate(self, model, x_test, y_test, x_train, y_train):
         x_proc = self.preprocess(x_test)
         predictions = self.predict(model, x_proc)
-        return pd.DataFrame({'tests': x_test, 'predictions': predictions, 'real': y_test})
+        df_test = pd.DataFrame({'text': x_test, 'predictions': predictions, 'real': y_test})
+        df_test['train_or_test'] = 'test'
 
-    def transform_dev(self, training_set):
-        "Only for dev, to reload model from local, to avoid retraining it everytime"
-        path = self.jargs.output_model['path'].replace('{now}/', '{latest}/')
-        path = Path_Handler(path, self.jargs.base_path, self.jargs.merged_args.get('root_path')).expand_later()
-        model = self.reload_model(path)
+        x_proc = self.preprocess(x_train)
+        predictions = self.predict(model, x_proc)
+        df_train = pd.DataFrame({'text': x_train, 'predictions': predictions, 'real': y_train})
+        df_train['train_or_test'] = 'train'
 
-        x_train, y_train, x_test, y_test = self.split_training_data(training_set, 0.8)
-        evaluations = self.evaluate(model, x_test, y_test)
-        return evaluations
+        return pd.concat([df_test, df_train])
 
 
 if __name__ == "__main__":
