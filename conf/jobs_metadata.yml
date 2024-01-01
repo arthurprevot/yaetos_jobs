@@ -359,9 +359,6 @@ jobs:
     spark_boot: False
     dependencies: [climate/climate_trace_extraction_job.py]
 
-    spark_boot: False
-
-
 
 # ----- Params -------
 common_params:
