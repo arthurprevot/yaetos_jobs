@@ -34,13 +34,6 @@ class Job(ETL_Base):
             assets = []
             self.logger.info(f"Couldn't pull data from {url} with error: {ex}")
 
-        # rows = []
-        # for asset in assets:
-        #     # fields = asset.keys()
-        #     row = {key: asset[key] for key in asset.keys()}
-        #     rows.append(row)
-
-        # return rows
         return [asset | {'page':offset} for asset in assets]
 
 
