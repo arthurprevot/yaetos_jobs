@@ -16,6 +16,7 @@ class Job(ETL_Base):
             rows = self.get_assets(countries=None, limit=None, offset=page)
             all_rows += rows
         df = pd.DataFrame(all_rows)
+        # TODO: transition the code to spark to make it more scallable.
         return df
 
     def get_assets(self, countries=None, limit=None, offset=None):

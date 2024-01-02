@@ -11,6 +11,7 @@ class Job(ETL_Base):
         df = df.explode('Emissions_post')
         dict_df = df['Emissions_post'].apply(pd.Series)
         result_df = df.drop('Emissions_post', axis=1).join(dict_df)
+        # TODO: transition the code to spark to make it more scallable.
         return result_df
 
 
