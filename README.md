@@ -30,3 +30,4 @@ This repository consists of data pipelines using yaetos data framework ([github.
 ## Other:
  * Data pipelines to showcase Yaetos core functionalities, using public wikipedia data.
 
+Lots of room for improvements. Contributions welcome. Feel free to reach out at arthur@yaetos.com. 
