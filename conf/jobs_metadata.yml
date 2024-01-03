@@ -344,6 +344,14 @@ jobs:
     dependencies: [gen_ai/albert_finetune_job.py]
     spark_boot: False
 
+  gen_ai/privateGPT_document_feeder_job.py:
+    description: "Feed documents to the privateGPT vector database."
+    host_privategpt: 'http://localhost:8001'
+    inputs:
+      listing: {'path':"./tests/fixtures/data_sample/gen_ai/listing.csv", 'type':'csv', 'df_type':'pandas'}  # Example file to be replaced
+    output: {'path':'{base_path}/gen_ai/privateGPT_feeder/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
+    spark_boot: False
+
 
   # ----- Climate data (Carbon emissions) Jobs --------
   climate/climate_trace_extraction_job.py:

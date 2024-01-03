@@ -1,3 +1,6 @@
+"""
+Documentation about ALBERT model hosted by huggingface is available at https://huggingface.co/docs/transformers/model_doc/albert .
+"""
 from yaetos.etl_utils import ETL_Base, Commandliner, Path_Handler
 from transformers import AlbertTokenizer, TFAlbertForSequenceClassification
 from transformers import file_utils
