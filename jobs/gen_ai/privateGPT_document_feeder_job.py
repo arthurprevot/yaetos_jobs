@@ -1,5 +1,5 @@
 """
-PrivateGPT project available at https://github.com/imartinez/privateGPT 
+PrivateGPT project available at https://github.com/imartinez/privateGPT
 Details about the privateGPT API: https://docs.privategpt.dev/
 """
 from yaetos.etl_utils import ETL_Base, Commandliner
@@ -11,7 +11,7 @@ logger = setup_logging('Job')
 class Job(ETL_Base):
     def transform(self, listing):
         host = self.jargs.merged_args['host_privategpt']
-        listing['in_gpt_store'] = listing.apply(lambda row: self.push_to_privategpt(row['file_dir']+row['file_name'], host), axis=1)
+        listing['in_gpt_store'] = listing.apply(lambda row: self.push_to_privategpt(row['file_dir'] + row['file_name'], host), axis=1)
         return listing
 
     @staticmethod
