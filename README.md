@@ -15,6 +15,7 @@
 This repository consists of data pipelines using yaetos ([github.com/arthurprevot/yaetos](https://github.com/arthurprevot/yaetos)). Such as:
  * Data pipelines to pull information out of ChatGPT programmatically, to feed into datasets.
  * Data pipelines to fine tune a "small" open source LLM (aka generative AI), called Albert, for classification, and to run inferences. The model is small enough to run from a laptop (no need for GPU).
+ * Data pipelines to feed documents to privateGPT vector database.
  * Data pipelines to pull employee contact information out of Apollo.io for a set of companies.
  * Data pipelines to process images (could be satellite, medical, etc) to find contours (@ scale, using Spark).
  * Data pipelines to process carbon emissions data from climate-trace (https://climatetrace.org/).

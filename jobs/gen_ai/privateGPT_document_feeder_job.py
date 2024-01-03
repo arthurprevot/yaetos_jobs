@@ -3,7 +3,6 @@ PrivateGPT project available at https://github.com/imartinez/privateGPT
 Details about the privateGPT API: https://docs.privategpt.dev/
 """
 from yaetos.etl_utils import ETL_Base, Commandliner
-import pandas as pd
 import requests
 from yaetos.logger import setup_logging
 logger = setup_logging('Job')
