@@ -10,12 +10,13 @@ logger = setup_logging('Job')
 
 class Job(ETL_Base):
     def transform(self, listing):
-        listing['in_gpt_store'] = listing.apply(lambda row: self.push_to_privategpt(doc=row['file_dir']+row['file_name']), axis=1)
+        host = self.jargs.merged_args['host_privategpt']
+        listing['in_gpt_store'] = listing.apply(lambda row: self.push_to_privategpt(row['file_dir']+row['file_name'], host), axis=1)
         return listing
 
     @staticmethod
-    def push_to_privategpt(doc):
-        url = 'http://localhost:8001/v1/ingest'
+    def push_to_privategpt(doc, host):
+        url = f'{host}/v1/ingest'
         with open(doc, 'rb') as file:
             files = {'file': (file.name, file, 'application/pdf')}
             response = requests.post(url, files=files)

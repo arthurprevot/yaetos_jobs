@@ -346,12 +346,10 @@ jobs:
 
   gen_ai/privateGPT_document_feeder_job.py:
     description: "Feed documents to the privateGPT vector database."
+    host_privategpt: 'http://localhost:8001'
     inputs:
       listing: {'path':"./tests/fixtures/data_sample/gen_ai/listing.csv", 'type':'csv', 'df_type':'pandas'}  # Example file to be replaced
-    # input_private: {'path':''}
     output: {'path':'{base_path}/gen_ai/privateGPT_feeder/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
-    # output: {'type':'None'}
-    # output_private: {'url':''}
     spark_boot: False
 
 
