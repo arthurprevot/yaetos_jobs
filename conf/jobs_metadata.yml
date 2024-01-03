@@ -310,7 +310,7 @@ jobs:
     spark_boot: False
     dependencies: [marketing/apollo_extraction_job.py]
 
-  # ----- ChatGPT --------
+  # ----- AI & Gen AI --------
   marketing/chatgpt_extraction_job.py:
     description: "Extract chatgpt data from list of companies provided."
     api_inputs: {'creds': 'chatgpt'}
@@ -319,14 +319,6 @@ jobs:
     output: {'path':'{base_path}/chatgpt_extraction/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas', 'save_kwargs':{'sep':';'}}
     spark_boot: False
 
-  # ----- Image processing --------
-  image_processing/image_processing_job.py:
-    description: "Perform contour detection in images. Will pickup and drop the images in the same folder as the listing file."
-    inputs:
-      listing: {'path':"./tests/fixtures/data_sample/images/listing.csv", 'type':'csv'}  # Example file to be replaced
-    output: {'path':'{base_path}/images_processing/2_processed/listing/{now}/', 'type':'csv'}
-
-  # ----- AI & Gen AI --------
   gen_ai/albert_finetune_job.py:
     description: "Finetune an existing language model (ALBERT) to perform classification tasks."
     inputs:
@@ -352,6 +344,12 @@ jobs:
     output: {'path':'{base_path}/gen_ai/privateGPT_feeder/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
     spark_boot: False
 
+  # ----- Image processing --------
+  image_processing/image_processing_job.py:
+    description: "Perform contour detection in images. Will pickup and drop the images in the same folder as the listing file."
+    inputs:
+      listing: {'path':"./tests/fixtures/data_sample/images/listing.csv", 'type':'csv'}  # Example file to be replaced
+    output: {'path':'{base_path}/images_processing/2_processed/listing/{now}/', 'type':'csv'}
 
   # ----- Climate data (Carbon emissions) Jobs --------
   climate/climate_trace_extraction_job.py:
