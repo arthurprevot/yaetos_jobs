@@ -12,7 +12,7 @@
 </div>
 
 # yaetos_jobs
-This repository consists of data pipelines using yaetos data framework ([github.com/arthurprevot/yaetos](https://github.com/arthurprevot/yaetos)). These are generic use cases that can be leveraged.
+This repository consists of data pipelines using yaetos data framework ([github.com/arthurprevot/yaetos](https://github.com/arthurprevot/yaetos)). Most are setup with small sample inputs so they should work out of the box.
 
 ## Generative AI:
  * Data pipelines to pull information out of ChatGPT programmatically, to feed into datasets.
