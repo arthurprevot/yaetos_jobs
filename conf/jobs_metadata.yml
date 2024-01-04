@@ -357,6 +357,14 @@ jobs:
     output: {'path':'{base_path}/climate_trace/raw/{now}/dataset.parquet', 'type':'parquet', 'df_type':'pandas'}
     spark_boot: False
 
+  climate/climate_trace_asset_dimension_job.py:
+    description: "Get info about emitting assets from climate trace data."
+    inputs:
+      climate_trace: {'path':"{base_path}/climate_trace/raw/{latest}/dataset.parquet", 'type':'parquet', 'df_type':'pandas'}
+    output: {'path':'{base_path}/climate_trace/asset_dimension/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
+    spark_boot: False
+    dependencies: [climate/climate_trace_extraction_job.py]
+
   climate/climate_trace_emission_fact_job.py:
     description: "Get yearly emission data from asset and emission type in climate trace data."
     inputs:
