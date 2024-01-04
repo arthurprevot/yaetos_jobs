@@ -320,7 +320,7 @@ jobs:
     spark_boot: False
 
   gen_ai/albert_finetune_job.py:
-    description: "Finetune an existing language model (ALBERT) to perform classification tasks."
+    description: "Finetune an existing language model (ALBERT) to perform classification tasks, using tensorflow and huggingface."
     inputs:
       training_set: {'path':"./tests/fixtures/data_sample/gen_ai/text_classification.csv", 'type':'csv', 'df_type':'pandas'}  # Example file to be replaced
     output: {'path':'{base_path}/gen_ai/finetuned_albert/tests/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
@@ -338,7 +338,7 @@ jobs:
 
   gen_ai/privateGPT_document_feeder_job.py:
     description: "Feed documents to the privateGPT vector database."
-    host_privategpt: 'http://localhost:8001'
+    host_privategpt: 'http://localhost:8001'  # To be updated according to your host.
     inputs:
       listing: {'path':"./tests/fixtures/data_sample/gen_ai/listing.csv", 'type':'csv', 'df_type':'pandas'}  # Example file to be replaced
     output: {'path':'{base_path}/gen_ai/privateGPT_feeder/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
