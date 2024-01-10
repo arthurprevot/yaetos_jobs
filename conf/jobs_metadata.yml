@@ -373,6 +373,15 @@ jobs:
     spark_boot: False
     dependencies: [climate/climate_trace_extraction_job.py]
 
+  climate/run_all:
+    description: "Run all climate-trace jobs"
+    py_job: jobs/generic/dummy_job.py
+    spark_boot: False
+    dependencies: 
+      - climate/climate_trace_extraction_job.py
+      - climate/climate_trace_asset_dimension_job.py
+      - climate/climate_trace_emission_fact_job.py
+
 
 # ----- Params -------
 common_params:
