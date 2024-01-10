@@ -9,17 +9,11 @@ import requests
 
 class Job(ETL_Base):
     def transform(self):
-        # API requires knowing number of pages. TODO: implement way to get number of pages from API. Waiting for answer from climate trace.
-
         countries = 'USA'
-        countries = 'AND'
         AssetCount, Emissions = self.get_assets_size(countries=countries)
-
-        # import ipdb; ipdb.set_trace()
-        assets_per_page = 10
+        assets_per_page = 100
         number_pages = AssetCount // assets_per_page + 1
         self.logger.info(f"About to pull data for {AssetCount} assets, in {number_pages} api calls, with {assets_per_page} assets per call.")
-        # import ipdb; ipdb.set_trace()
         all_rows = []
         offset = 0
         for page in range(number_pages):
@@ -53,7 +47,6 @@ class Job(ETL_Base):
         keys = list(data.keys())
         assert len(keys) == 1
         rows = data[keys[0]]
-        # import ipdb; ipdb.set_trace()
         AssetCount = sum([item['AssetCount'] for item in rows])
         Emissions = sum([item['Emissions'] for item in rows])  # TODO: make sure it can be sumed.
         return AssetCount, Emissions
