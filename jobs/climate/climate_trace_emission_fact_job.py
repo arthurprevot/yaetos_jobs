@@ -14,6 +14,7 @@ class Job(ETL_Base):
         # TODO: transition the code to spark to make it more scallable.
         return result_df
 
+
 def map_emissions(years_list):
     rows = []
     if years_list is None:
