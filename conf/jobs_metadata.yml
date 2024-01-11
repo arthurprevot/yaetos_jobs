@@ -373,6 +373,15 @@ jobs:
     spark_boot: False
     dependencies: [climate/climate_trace_extraction_job.py]
 
+  climate/climate_trace_assets_master_california_job.py:
+    description: "."
+    inputs:
+      assets_dimension: {'path':'{base_path}/climate_trace/asset_dimension/{latest}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
+      emission_facts: {'path':'{base_path}/climate_trace/emission_facts/{latest}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
+    output: {'path':'{base_path}/climate_trace/assets_master_california/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
+    spark_boot: False
+    # dependencies: [climate/climate_trace_extraction_job.py]
+
   climate/run_all:
     description: "Run all climate-trace jobs"
     py_job: jobs/generic/dummy_job.py
