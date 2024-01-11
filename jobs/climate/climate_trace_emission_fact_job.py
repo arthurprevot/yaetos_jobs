@@ -17,6 +17,9 @@ class Job(ETL_Base):
 
 def map_emissions(years_list):
     rows = []
+    if years_list is None:
+        print('WARNING: Cases to inspect')
+        return []
     for years_dict in years_list:
         for year, year_emission_list in years_dict.items():
             if isinstance(year_emission_list, np.ndarray):

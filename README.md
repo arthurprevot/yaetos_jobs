@@ -15,19 +15,19 @@
 This repository consists of data pipelines using yaetos data framework ([github.com/arthurprevot/yaetos](https://github.com/arthurprevot/yaetos)). Most are setup with small sample inputs so they should work out of the box.
 
 ## Generative AI:
- * Data pipelines to pull information out of ChatGPT programmatically, to feed into datasets.
- * Data pipelines to fine tune a "small" open source LLM (aka generative AI), called Albert, for classification, and to run inferences. The model is small enough to run from a laptop (no need for GPU).
- * Data pipelines to feed documents (pdf, text) to privateGPT vector database to add knowledge to local LLM.
+ * Data pipeline to pull information out of ChatGPT programmatically, to feed into datasets.
+ * Data pipeline to fine-tune a "small" open source LLM called Albert, for classification, and to run inferences. The model is small enough to run from a laptop in minutes for the test case (no need for GPU).
+ * Data pipeline to feed documents (pdf, text) to privateGPT vector database to add knowledge to local LLM.
 
 ## Scientific (Climate data, image processing):
- * Data pipelines to process carbon emissions data from climate-trace (https://climatetrace.org/).
- * Data pipelines to process images (could be satellite, medical, etc) to find contours (@ scale, using Spark).
+ * Data pipeline to process carbon emissions data from climate-trace (https://climatetrace.org/).
+ * Data pipeline to process images (could be satellite, medical, etc) to find contours (@ scale, using Spark).
 
 ## Sales/Marketing:
- * Data pipelines to pull employee contact information out of Apollo.io for a set of companies.
- * Data pipelines to pull information from Github contributors using Github API. 
+ * Data pipeline to pull employee contact information out of Apollo.io for a set of companies.
+ * Data pipeline to pull information from Github contributors using Github API. 
 
 ## Other:
- * Data pipelines to showcase Yaetos core functionalities, using public wikipedia data.
+ * Data pipeline to showcase Yaetos core functionalities, using public wikipedia data.
 
 Lots of room for improvements. Contributions welcome. Feel free to reach out at arthur@yaetos.com. 

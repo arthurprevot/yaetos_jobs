@@ -310,7 +310,7 @@ jobs:
     spark_boot: False
     dependencies: [marketing/apollo_extraction_job.py]
 
-  # ----- ChatGPT --------
+  # ----- AI & Gen AI --------
   marketing/chatgpt_extraction_job.py:
     description: "Extract chatgpt data from list of companies provided."
     api_inputs: {'creds': 'chatgpt'}
@@ -319,16 +319,8 @@ jobs:
     output: {'path':'{base_path}/chatgpt_extraction/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas', 'save_kwargs':{'sep':';'}}
     spark_boot: False
 
-  # ----- Image processing --------
-  image_processing/image_processing_job.py:
-    description: "Perform contour detection in images. Will pickup and drop the images in the same folder as the listing file."
-    inputs:
-      listing: {'path':"./tests/fixtures/data_sample/images/listing.csv", 'type':'csv'}  # Example file to be replaced
-    output: {'path':'{base_path}/images_processing/2_processed/listing/{now}/', 'type':'csv'}
-
-  # ----- AI & Gen AI --------
   gen_ai/albert_finetune_job.py:
-    description: "Finetune an existing language model (ALBERT) to perform classification tasks."
+    description: "Finetune an existing language model (ALBERT) to perform classification tasks, using tensorflow and huggingface."
     inputs:
       training_set: {'path':"./tests/fixtures/data_sample/gen_ai/text_classification.csv", 'type':'csv', 'df_type':'pandas'}  # Example file to be replaced
     output: {'path':'{base_path}/gen_ai/finetuned_albert/tests/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
@@ -346,18 +338,32 @@ jobs:
 
   gen_ai/privateGPT_document_feeder_job.py:
     description: "Feed documents to the privateGPT vector database."
-    host_privategpt: 'http://localhost:8001'
+    host_privategpt: 'http://localhost:8001'  # To be updated according to your host.
     inputs:
       listing: {'path':"./tests/fixtures/data_sample/gen_ai/listing.csv", 'type':'csv', 'df_type':'pandas'}  # Example file to be replaced
     output: {'path':'{base_path}/gen_ai/privateGPT_feeder/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
     spark_boot: False
 
+  # ----- Image processing --------
+  image_processing/image_processing_job.py:
+    description: "Perform contour detection in images. Will pickup and drop the images in the same folder as the listing file."
+    inputs:
+      listing: {'path':"./tests/fixtures/data_sample/images/listing.csv", 'type':'csv'}  # Example file to be replaced
+    output: {'path':'{base_path}/images_processing/2_processed/listing/{now}/', 'type':'csv'}
 
   # ----- Climate data (Carbon emissions) Jobs --------
   climate/climate_trace_extraction_job.py:
     description: "Ingest climate trace data. From https://climatetrace.org/."
     output: {'path':'{base_path}/climate_trace/raw/{now}/dataset.parquet', 'type':'parquet', 'df_type':'pandas'}
     spark_boot: False
+
+  climate/climate_trace_asset_dimension_job.py:
+    description: "Get info about emitting assets from climate trace data."
+    inputs:
+      climate_trace: {'path':"{base_path}/climate_trace/raw/{latest}/dataset.parquet", 'type':'parquet', 'df_type':'pandas'}
+    output: {'path':'{base_path}/climate_trace/asset_dimension/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
+    spark_boot: False
+    dependencies: [climate/climate_trace_extraction_job.py]
 
   climate/climate_trace_emission_fact_job.py:
     description: "Get yearly emission data from asset and emission type in climate trace data."
@@ -366,6 +372,33 @@ jobs:
     output: {'path':'{base_path}/climate_trace/emission_facts/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
     spark_boot: False
     dependencies: [climate/climate_trace_extraction_job.py]
+
+  climate/climate_trace_assets_master_california_job.py:
+    description: "."
+    inputs:
+      assets_dimension: {'path':'{base_path}/climate_trace/asset_dimension/{latest}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
+      emission_facts: {'path':'{base_path}/climate_trace/emission_facts/{latest}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
+    output: {'path':'{base_path}/climate_trace/assets_master_california/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
+    spark_boot: False
+    dependencies:
+      - climate/climate_trace_asset_dimension_job.py
+      - climate/climate_trace_emission_fact_job.py
+
+  climate/run_all:
+    description: "Run all climate-trace jobs"
+    py_job: jobs/generic/dummy_job.py
+    spark_boot: False
+    dependencies: 
+      - climate/climate_trace_extraction_job.py
+      - climate/climate_trace_asset_dimension_job.py
+      - climate/climate_trace_emission_fact_job.py
+
+  # ----- Dashboards--------
+  dashboards/climate_trace.ipynb:
+    description: "Dashboard to visualize climate_trace data."
+    inputs:
+      assets: {'path':'{base_path}/climate_trace/assets_master_california/{latest}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
+    dependencies: [climate/climate_trace_assets_master_california_job.py]
 
 
 # ----- Params -------
