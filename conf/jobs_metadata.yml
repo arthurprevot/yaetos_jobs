@@ -380,7 +380,9 @@ jobs:
       emission_facts: {'path':'{base_path}/climate_trace/emission_facts/{latest}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
     output: {'path':'{base_path}/climate_trace/assets_master_california/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
     spark_boot: False
-    # dependencies: [climate/climate_trace_extraction_job.py]
+    dependencies:
+      - climate/climate_trace_asset_dimension_job.py
+      - climate/climate_trace_emission_fact_job.py
 
   climate/run_all:
     description: "Run all climate-trace jobs"
@@ -395,9 +397,6 @@ jobs:
   dashboards/climate_trace.ipynb:
     description: "Dashboard to visualize climate_trace data."
     inputs:
-      # assets: {'path':"{base_path}/climate_trace/raw/{latest}/dataset.parquet", 'type':'parquet', 'df_type':'pandas'}
-      # assets: {'path':'{base_path}/climate_trace/asset_dimension/{latest}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
-      # emissions: {'path':'{base_path}/climate_trace/emission_facts/{latest}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
       assets: {'path':'{base_path}/climate_trace/assets_master_california/{latest}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
     dependencies: [climate/climate_trace_assets_master_california_job.py]
 
