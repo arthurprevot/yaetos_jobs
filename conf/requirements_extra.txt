@@ -6,4 +6,4 @@ opencv-python==4.8.1.78
 tensorflow==2.11.0 # latest 2.15.0
 transformers==4.30.2 # latest 4.36.2
 sentencepiece==0.1.99
-humanize==4.9.0
+# humanize==4.0.0 # latest 4.9.0 put not available in python3.9. TODO: put in new requirement file for dashboard only.
