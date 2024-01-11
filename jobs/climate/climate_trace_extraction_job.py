@@ -16,7 +16,7 @@ class Job(ETL_Base):
         self.logger.info(f"About to pull data for {AssetCount} assets, in {number_pages} api calls, with {assets_per_page} assets per call.")
         all_rows = []
         offset = 0
-        for page in range(number_pages):
+        for ii in range(number_pages):
             rows = self.get_assets(countries=countries, limit=assets_per_page, offset=offset)
             offset += assets_per_page
             all_rows += rows
@@ -50,7 +50,6 @@ class Job(ETL_Base):
         AssetCount = sum([item['AssetCount'] for item in rows])
         Emissions = sum([item['Emissions'] for item in rows])  # TODO: make sure it can be sumed.
         return AssetCount, Emissions
-
 
     def api_pull(self, url, get_size_fct):
         try:

@@ -14,11 +14,10 @@ class Job(ETL_Base):
         # TODO: transition the code to spark to make it more scallable.
         return result_df
 
-
 def map_emissions(years_list):
     rows = []
     if years_list is None:
-        print('WARNING: Need to inspect cases where that happens')
+        print('WARNING: Cases to inspect')
         return []
     for years_dict in years_list:
         for year, year_emission_list in years_dict.items():

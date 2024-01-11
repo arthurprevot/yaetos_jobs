@@ -1,6 +1,4 @@
 from yaetos.etl_utils import ETL_Base, Commandliner
-import pandas as pd
-import numpy as np
 
 
 class Job(ETL_Base):
