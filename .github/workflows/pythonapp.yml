@@ -1,3 +1,4 @@
+# Instructions: in the YAETOS_JOBS_HOME path below, update yaetos_jobs to the name of your repo (for both occurences)
 name: CI
 
 on: [push]
@@ -8,20 +9,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # Setup close to EMR7.0.0 (same python, same spark versions)
     - uses: actions/checkout@v3
-    - name: Set up Python 3.7
+    - name: Set up Python
       uses: actions/setup-python@v1
       with:
-        python-version: 3.7  # installs 3.7.17. emr-6.15.0 includes python 3.7.16
+        python-version: 3.9  # installs 3.9.x emr-7.0.0 includes python 3.9.x, emr-6.15.0 includes python 3.7.16
     # Spark setup as per https://github.com/marketplace/actions/setup-apache-spark
-    - uses: actions/setup-java@v1
+    - uses: actions/setup-java@v3
       with:
-        java-version: '11'
+        java-version: '17'
+        distribution: temurin
 
     - uses: vemonet/setup-spark@v1
       with:
-        spark-version: '3.1.3'
-        hadoop-version: '3.2'
+        spark-version: '3.5.0'
+        hadoop-version: '3'
 
     - run: spark-submit --version
     - name: Install dependencies
@@ -32,8 +35,8 @@ jobs:
     - name: Test with pytest
       run: |
         pip install pytest
-        export YAETOS_JOBS_HOME=/home/runner/work/yaetos_jobs/yaetos_jobs  # TODO: find cleaner way
-        export PYTHONPATH=$YAETOS_JOBS_HOME:$PYTHONPATH  # TODO: same
+        export YAETOS_JOBS_HOME=/home/runner/work/yaetos_jobs/yaetos_jobs  # to be updated by repo name. TODO: find cleaner way
+        export PYTHONPATH=$YAETOS_JOBS_HOME:$PYTHONPATH
         pytest
     - name: Lint with flake8
       run: |
@@ -43,7 +46,7 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # enforce all rules except these below
         echo 'Code formatting not compliant, enforced'
-        flake8 . --count --ignore=E501,C901,E402,W605,W504,E731 --max-complexity=10 --max-line-length=127 --statistics  # TODO: check to remove "--ignore" codes.
+        flake8 . --count --ignore=E501,C901,E402,W605 --max-complexity=10 --max-line-length=127 --statistics  # TODO: check to remove "--ignore" codes.
         # info about non-enforced checks. exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         echo 'Rest of formatting not pep8 compliant, not enforced'
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics  # --exit-zero to not block merging if not compliant.
