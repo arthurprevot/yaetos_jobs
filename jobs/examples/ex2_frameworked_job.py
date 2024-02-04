@@ -18,8 +18,8 @@ class Job(ETL_Base):
         udf_format_datetime = udf(self.format_datetime, StringType())
 
         events_cleaned = df \
-            .withColumn('timestamp_obj', udf_format_datetime(df.timestamp).cast("timestamp")) #\
-#            .where(col('timestamp').like("%2.016%") is False)
+            .withColumn('timestamp_obj', udf_format_datetime(df.timestamp).cast("timestamp")) \
+            .where(~col('timestamp').like("%2.016%"))
 
         events_cleaned.createOrReplaceTempView("events_cleaned")
 
