@@ -319,13 +319,28 @@ jobs:
     output: {'path':'{base_path}/chatgpt_extraction/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas', 'save_kwargs':{'sep':';'}}
     spark_boot: False
 
+  gen_ai/albert_finetune_copy_data_job:
+    description: "Copy data from local to cloud."
+    py_job: jobs/generic/copy_job.py
+    inputs:
+      table_to_copy: {'path':"./tests/fixtures/data_sample/gen_ai/text_classification.csv", 'type':'csv'}  # Example file to be replaced
+    output: {'path':'{base_path}/gen_ai/finetuned_albert/raw/{now}/', 'type':'csv'}
+    base_path: 's3a://mylake-dev/pipelines_data'
+    aws_config_file:  conf/aws_config.cfg
+    aws_setup: dev
+    load_connectors: all
+
   gen_ai/albert_finetune_job.py:
     description: "Finetune an existing language model (ALBERT) to perform classification tasks, using tensorflow and huggingface."
     inputs:
-      training_set: {'path':"./tests/fixtures/data_sample/gen_ai/text_classification.csv", 'type':'csv', 'df_type':'pandas'}  # Example file to be replaced
+      # training_set: {'path':"./tests/fixtures/data_sample/gen_ai/text_classification.csv", 'type':'csv', 'df_type':'pandas'}  # Example file to be replaced
+      training_set: {'path':'{base_path}/gen_ai/finetuned_albert/raw/{latest}/', 'type':'csv', 'df_type':'pandas'}
     output: {'path':'{base_path}/gen_ai/finetuned_albert/tests/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
     output_model: {'path':'{base_path}/gen_ai/finetuned_albert/model/{now}/'}
     spark_boot: False
+    ec2_instance_master: 'g4dn.xlarge'
+    emr_core_instances: 0
+
 
   gen_ai/albert_finetuned_inferences_job.py:
     description: "Run classification job. Depends on model and code from job albert_finetune_job.py."
@@ -410,7 +425,7 @@ common_params:
     connection_file:  conf/connections.cfg
     redshift_s3_tmp_dir: s3a://dev-spark/tmp_spark/
     email_cred_section: some_email_cred_section  # Section from "connection_file"
-    spark_version: '3.4' # options: '2.4', '3.0' or '3.4'
+    spark_version: '3.5' # options: '2.4', '3.0', '3.4' or '3.5'
   mode_specific_params:
     prod_EMR:
       root_path: s3://mylake-prod  # don't add '/' at the end
