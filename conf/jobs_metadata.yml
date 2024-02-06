@@ -223,6 +223,25 @@ jobs:
     output: {'path':'{base_path}/load_example/excel/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
     spark_boot: False
 
+  examples/copy_local_to_cloud_job:
+    description: "Copy data from local to cloud. To be executed from local only."
+    py_job: jobs/generic/copy_job.py
+    inputs:
+      table_to_copy: {'path':"tests/fixtures/data_sample/wiki_example/input/", 'type':'csv'}
+    output: {'path':'{base_path}/load_example/test_files/{now}/', 'type':'csv'}
+    base_path: 's3a://mylake-dev/pipelines_data'
+    aws_config_file:  conf/aws_config.cfg
+    aws_setup: dev
+    load_connectors: all
+
+  examples/ex11_run_gpu_for_deeplearning.py:
+    description: ""
+    inputs:
+      training_set: {'path':'{base_path}/gen_ai/finetuned_albert/raw/{latest}/', 'type':'csv', 'df_type':'pandas'}  # file available in repo in ./tests/fixtures/data_sample/gen_ai/text_classification.csv
+    output: {'path':'{base_path}/load_example/test_files/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
+    ec2_instance_master: 'g4dn.xlarge'  # access to this GPU instance may requires special request to AWS.
+    emr_core_instances: 0
+
   examples/wordcount_frameworked_job.py:
     description: "shows raw pyspark rdd ops in framework, same as wordcount_raw_job"
     inputs:
@@ -406,6 +425,31 @@ jobs:
       - climate/climate_trace_extraction_job.py
       - climate/climate_trace_asset_dimension_job.py
       - climate/climate_trace_emission_fact_job.py
+
+  examples/ex12_run_scala_job:
+    description: "Sample spark scala code (compiled into a jar), executed through spark-submit"
+    jar_job: 'jobs/examples/ex12_scala_job/target/spark_scala_job_2.13-1.0.jar'
+    scala_job: 'jobs/examples/ex12_scala_job/src/spark_scala_job.scala'  # for ref, compilation to be done manually
+    sbt: 'jobs/examples/ex12_scala_job/build.sbt'  # for ref, compilation to be done manually
+    spark_submit_args: '--verbose'
+    spark_app_args: '{base_path}/wordcount_example/input/sample_text.txt'
+    load_connectors: none
+  
+  examples/ex13_register_athena_job:
+    description: "Job to demo registering data to Athena. Setup to be run locally, while pushing data to cloud and registering data to athena in AWS."
+    py_job: jobs/examples/ex1_frameworked_job.py
+    inputs:
+      some_events: {'path':"./data/wiki_example/input/{latest}/", 'type':'csv'}
+      other_events: {'path':"./data/wiki_example/input/{latest}/", 'type':'csv'}
+    output: {'path':'{base_path}/wiki_example/output_ex7_pandas/{now}/', 'type':'csv'}
+    base_path: 's3a://mylake-dev/pipelines_data'
+    register_to_athena: {'table': 'sandbox.ex1_frameworked'}  # implies sandbox schema created, to be done with "CREATE DATABASE sandbox;" in SQL editor
+    enable_db_push: True
+    aws_config_file:  conf/aws_config.cfg
+    aws_setup: dev
+    athena_out: s3://mylake-dev/pipelines_data/athena_data/
+    load_connectors: all
+
 
   # ----- Dashboards--------
   dashboards/climate_trace.ipynb:
