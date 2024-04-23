@@ -32,7 +32,3 @@ This repository consists of data pipelines using yaetos data framework ([github.
 
 Lots of room for improvements. Contributions welcome. Feel free to reach out at arthur@yaetos.com. 
 
-#----- TODO: to add later ------
- * Data pipeline to process banking information, grouping data from various accounts, re-labeling transactions differently from the bank, and organising it in a way not available from the bank.
- * Data pipeline to pull all contacts from various sources and put it in one dataset.
-

@@ -477,7 +477,7 @@ common_params:
       aws_config_file:  conf/aws_config.cfg
       aws_setup:        pro
       jobs_folder:      jobs/
-      load_connectors: all
+      load_connectors: none
       enable_db_push: True
       save_schemas: False
       manage_git_info: True
@@ -488,7 +488,7 @@ common_params:
       aws_config_file:  conf/aws_config.cfg
       aws_setup:        dev
       jobs_folder:      jobs/
-      load_connectors: all
+      load_connectors: none
       enable_db_push: False
       save_schemas: False
       manage_git_info: True
