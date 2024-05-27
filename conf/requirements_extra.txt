@@ -1,7 +1,7 @@
 # Add python libraries required by your jobs (following standard python requirements.txt format)
 
 requests==2.31.0
-jupyter==1.0.0
+jupyterlab==4.2.1
 
 # Libs for AI & gen AI jobs
 openai==1.3.7
