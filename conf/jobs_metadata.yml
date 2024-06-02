@@ -55,6 +55,29 @@ jobs:
     frequency: '@once'
     emails: ['some_email@address.com']
 
+  bts/ex1_datadup_job.py:
+    description: "dup data 100x"
+    inputs:
+      pageviews: {'path':"{base_path}/wiki_example/input/{latest}/", 'type':'csv'}
+    output: {'path':'{base_path}/wiki_example/bts/ex1_datadup_job/{now}/', 'type':'csv'}
+    dependencies: [examples/ex0_extraction_job.py]
+    # no_fw_cache: True
+    ec2_instance_master: 'm5.xlarge'
+    ec2_instance_slaves: 'm5.xlarge'
+    emr_core_instances: 2
+
+  bts/ex1_page_metrics_job.sql:
+    description: "shows sql job, using spark, for large datasets."
+    py_job: 'jobs/generic/sql_spark_job.py'
+    # sql_file: 'jobs/bts/ex1_user_metrics_job.sql'
+    inputs:
+      pageviews: {'path':"{base_path}/wiki_example/bts/ex1_datadup_job/{latest}/", 'type':'csv'}
+    output: {'path':'{base_path}/wiki_example/bts/ex1_page_metrics_job/{now}/', 'type':'csv'}
+    dependencies: [examples/ex0_extraction_job.py]
+    repartition: 1
+    frequency: '@once'
+    emails: ['some_email@address.com']
+
   job_using_generic_template:
     description: "to show how to reuse existing job code"
     py_job: 'jobs/examples/ex1_frameworked_job.py'
@@ -482,11 +505,12 @@ common_params:
       save_schemas: False
       manage_git_info: True
     dev_EMR:
-      root_path: s3://mylake-dev  # don't add '/' at the end
+      # root_path: s3://mylake-dev  # don't add '/' at the end
+      root_path: s3://mylake-dev-testap  # don't add '/' at the end
       schema: sandbox
       emr_core_instances: 0
       aws_config_file:  conf/aws_config.cfg
-      aws_setup:        dev
+      aws_setup:        dev_AWSAcad
       jobs_folder:      jobs/
       load_connectors: none
       enable_db_push: False
