@@ -9,6 +9,7 @@ import requests
 
 class Job(ETL_Base):
     def transform(self):
+        # Code in pandas so limited in output size.
         countries = 'USA'
         AssetCount, Emissions = self.get_assets_size(countries=countries)
         assets_per_page = 100
@@ -21,7 +22,6 @@ class Job(ETL_Base):
             offset += assets_per_page
             all_rows += rows
         df = pd.DataFrame(all_rows)
-        # TODO: transition the code to spark to make it more scallable.
         return df
 
     def get_assets(self, countries=None, limit=None, offset=None):
@@ -30,7 +30,7 @@ class Job(ETL_Base):
         args += f'countries={countries}&' if countries else ''
         args += f'limit={limit}&' if limit else ''
         args += f'offset={offset}&' if offset else ''
-        # Note: tested sectors, subsectors and year params but they don't seem to work
+        # Note: tested sectors, subsectors and year params but they didn't work
         url += args
         get_table = lambda data: data['assets']
         __, ___, assets = self.api_pull(url, get_table)

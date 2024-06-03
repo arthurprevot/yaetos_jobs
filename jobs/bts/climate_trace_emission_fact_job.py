@@ -5,13 +5,13 @@ import numpy as np
 
 class Job(ETL_Base):
     def transform(self, climate_trace):
+        # Code in pandas so limited in output size.
         df = climate_trace
         df['Emissions_post'] = df['Emissions'].apply(map_emissions)
         df = df[['Id', 'Name', 'Emissions_post']]
         df = df.explode('Emissions_post')
         dict_df = df['Emissions_post'].apply(pd.Series)
         result_df = df.drop('Emissions_post', axis=1).join(dict_df)
-        # TODO: transition the code to spark to make it more scallable.
         result_df = result_df.drop(0, axis=1)
         result_df.index.name = 'index'
         return result_df
