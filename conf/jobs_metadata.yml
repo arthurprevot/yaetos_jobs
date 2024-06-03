@@ -34,13 +34,15 @@ jobs:
   # ----- Climate data (Carbon emissions) Jobs --------
   climate/climate_trace_extraction_job.py:
     description: "Ingest climate trace data. From https://climatetrace.org/. Takes about 10 min to extract."
-    output: {'path':'{base_path}/climate_trace/raw/{now}/dataset.parquet', 'type':'parquet', 'df_type':'pandas'}
+    # output: {'path':'{base_path}/climate_trace/raw/{now}/dataset.parquet', 'type':'parquet', 'df_type':'pandas'}
+    output: {'path':'{base_path}/climate_trace/raw/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
     spark_boot: False
 
   bts/climate_trace_asset_dimension_job.py:
     description: "Get info about emitting assets from climate trace data."
     inputs:
-      climate_trace: {'path':"{base_path}/climate_trace/raw/{latest}/dataset.parquet", 'type':'parquet', 'df_type':'pandas'}
+      # climate_trace: {'path':"{base_path}/climate_trace/raw/{latest}/dataset.parquet", 'type':'parquet', 'df_type':'pandas'}
+      climate_trace: {'path':"{base_path}/climate_trace/raw/{latest}/dataset.csv", 'type':'csv', 'df_type':'pandas'}
     # output: {'path':'{base_path}/climate_trace/asset_dimension/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
     output: {'path':'{base_path}/climate_trace/asset_dimension/{now}/dataset.parquet', 'type':'parquet', 'df_type':'pandas'}
     spark_boot: False
@@ -51,7 +53,8 @@ jobs:
     description: "Get yearly emission data from asset and emission type in climate trace data."
     inputs:
       climate_trace: {'path':"{base_path}/climate_trace/raw/{latest}/dataset.parquet", 'type':'parquet', 'df_type':'pandas'}
-    output: {'path':'{base_path}/climate_trace/emission_facts/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
+    # output: {'path':'{base_path}/climate_trace/emission_facts/{now}/dataset.csv', 'type':'csv', 'df_type':'pandas'}
+    output: {'path':'{base_path}/climate_trace/emission_facts/{now}/dataset.parquet', 'type':'parquet', 'df_type':'pandas'}
     spark_boot: False
     dependencies: 
       - bts/climate_trace_extraction_job.py
