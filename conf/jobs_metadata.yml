@@ -469,6 +469,9 @@ common_params:
     redshift_s3_tmp_dir: s3a://dev-spark/tmp_spark/
     email_cred_section: some_email_cred_section  # Section from "connection_file"
     spark_version: '3.5' # options: '2.4', '3.0', '3.4' or '3.5'
+    default_aws_modes: 'dev_EMR'
+    default_local_modes: 'dev_local'
+    aws_modes: ['dev_EMR','prod_EMR']
   mode_specific_params:
     prod_EMR:
       root_path: s3://mylake-prod  # don't add '/' at the end
@@ -491,7 +494,7 @@ common_params:
       load_connectors: none
       enable_db_push: False
       save_schemas: False
-      manage_git_info: True
+      manage_git_info: False
     dev_local:
       root_path: '.'  # don't add '/' at the end
       base_path: '{{root_path}}/data'  # don't add '/' at the end
