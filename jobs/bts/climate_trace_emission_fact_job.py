@@ -36,5 +36,5 @@ def map_emissions(years_list):
 
 
 if __name__ == "__main__":
-    args = {'job_param_file': 'conf/jobs_metadata.yml'}
+    args = {'job_param_file': 'conf/jobs_metadata_bts_climate.yml'}
     Commandliner(Job, **args)
