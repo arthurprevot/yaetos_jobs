@@ -2,14 +2,14 @@
 jobs:
   bts/climate_trace_extraction_job.py:
     description: "Ingest climate trace data. From https://climatetrace.org/. Takes about 10 min to extract."
-    output: {'path':'{base_path}/climate_trace/raw/{now}/dataset.parquet', 'type':'parquet', 'df_type':'pandas'}
+    output: {'path':'{base_path}/climate_trace/raw/{{now}}/dataset.parquet', 'type':'parquet', 'df_type':'pandas'}
     spark_boot: False
 
   bts/climate_trace_asset_dimension_job.py:
     description: "Get info about emitting assets from climate trace data."
     inputs:
-      climate_trace: {'path':"{base_path}/climate_trace/raw/{latest}/dataset.parquet", 'type':'parquet', 'df_type':'pandas'}
-    output: {'path':'{base_path}/climate_trace/asset_dimension/{now}/dataset.parquet', 'type':'parquet', 'df_type':'pandas'}
+      climate_trace: {'path':"{base_path}/climate_trace/raw/{{latest}}/dataset.parquet", 'type':'parquet', 'df_type':'pandas'}
+    output: {'path':'{base_path}/climate_trace/asset_dimension/{{now}}/dataset.parquet', 'type':'parquet', 'df_type':'pandas'}
     spark_boot: False
     dependencies: 
       - bts/climate_trace_extraction_job.py
@@ -17,8 +17,8 @@ jobs:
   bts/climate_trace_emission_fact_job.py:
     description: "Get yearly emission data from asset and emission type in climate trace data."
     inputs:
-      climate_trace: {'path':"{base_path}/climate_trace/raw/{latest}/dataset.parquet", 'type':'parquet', 'df_type':'pandas'}
-    output: {'path':'{base_path}/climate_trace/emission_facts/{now}/dataset.parquet', 'type':'parquet', 'df_type':'pandas'}
+      climate_trace: {'path':"{base_path}/climate_trace/raw/{{latest}}/dataset.parquet", 'type':'parquet', 'df_type':'pandas'}
+    output: {'path':'{base_path}/climate_trace/emission_facts/{{now}}/dataset.parquet', 'type':'parquet', 'df_type':'pandas'}
     spark_boot: False
     dependencies: 
       - bts/climate_trace_extraction_job.py
@@ -26,8 +26,8 @@ jobs:
   bts/emission_fact_expansion_job.py:
     description: "dup data 32x to get to >100M rows"
     inputs:
-      emissions: {'path':"{base_path}/climate_trace/emission_facts/{latest}/", 'type':'parquet'}
-    output: {'path':'{base_path}/climate_trace/emission_facts_expanded/{now}/', 'type':'parquet'}
+      emissions: {'path':"{base_path}/climate_trace/emission_facts/{{latest}}/", 'type':'parquet'}
+    output: {'path':'{base_path}/climate_trace/emission_facts_expanded/{{now}}/', 'type':'parquet'}
     dependencies: 
       - bts/climate_trace_emission_fact_job.py
     ec2_instance_master: 'm5.xlarge'
