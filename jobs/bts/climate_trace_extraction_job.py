@@ -10,26 +10,26 @@ import requests
 class Job(ETL_Base):
     def transform(self):
         # Code in pandas so limited in output size.
-        countries = 'USA'
+        countries = 'ESP'
         continent = 'Europe'
-        countries = continent
-        AssetCount, Emissions = self.get_assets_size(countries=countries)
-        assets_per_page = 100
+        AssetCount, Emissions = self.get_assets_size(countries=countries, continent=continent)
+        assets_per_page = 500
         number_pages = AssetCount // assets_per_page + 1
         self.logger.info(f"About to pull data for {AssetCount} assets, in {number_pages} api calls, with {assets_per_page} assets per call.")
         all_rows = []
         offset = 0
-        for ii in range(number_pages):
-            rows = self.get_assets(countries=countries, limit=assets_per_page, offset=offset)
+        for ii in range(10):
+            rows = self.get_assets(countries=countries, continent=continent, limit=assets_per_page, offset=offset)
             offset += assets_per_page
             all_rows += rows
         df = pd.DataFrame(all_rows)
         return df
 
-    def get_assets(self, countries=None, limit=None, offset=None):
+    def get_assets(self, countries=None, continent=None, limit=None, offset=None):
         url = "https://api.climatetrace.org/v6/assets"
         args = '?'
-        args += f'continents={countries}&' if countries else ''
+        args += f'countries={countries}&' if countries else ''
+        args += f'continents={continent}&' if continent else ''
         args += f'limit={limit}&' if limit else ''
         args += f'offset={offset}&' if offset else ''
         # Note: tested sectors, subsectors and year params but they didn't work
@@ -39,10 +39,11 @@ class Job(ETL_Base):
         assets = [asset | {'offset_batch': offset} for asset in assets]
         return assets
 
-    def get_assets_size(self, countries=None, limit=None):
+    def get_assets_size(self, countries=None, continents=None, limit=None):
         url = "https://api.climatetrace.org/v6/assets/emissions"
         args = '?'
-        args += f'continents={countries}&' if countries else ''
+        args += f'countries={countries}&' if countries else ''
+        args += f'continents={continents}&' if continents else ''
         url += args
         dummy_size_fct = lambda data: None
         __, data, ___ = self.api_pull(url, dummy_size_fct)
