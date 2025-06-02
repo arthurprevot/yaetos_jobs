@@ -485,11 +485,11 @@ common_params:
       save_schemas: False
       manage_git_info: True
     dev_EMR:
-      root_path: s3://mylake-dev  # don't add '/' at the end
+      root_path: s3://mylake-dev-testap2  # don't add '/' at the end
       schema: sandbox
       emr_core_instances: 0
       aws_config_file:  conf/aws_config.cfg
-      aws_setup:        dev
+      aws_setup:        dev_BTS
       jobs_folder:      jobs/
       load_connectors: none
       enable_db_push: False

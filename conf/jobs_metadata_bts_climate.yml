@@ -74,7 +74,7 @@ common_params:
       schema: sandbox
       emr_core_instances: 0
       aws_config_file:  conf/aws_config.cfg
-      aws_setup:        dev_AWSAcad
+      aws_setup:        dev_BTS
       jobs_folder:      jobs/
       load_connectors: none
       enable_db_push: False
