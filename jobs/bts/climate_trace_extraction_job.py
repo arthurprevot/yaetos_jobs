@@ -52,7 +52,6 @@ class Job(ETL_Base):
         __, data, ___ = self.api_pull(url, dummy_size_fct)
         assert data is not None
         keys = list(data.keys())
-        # import ipdb; ipdb.set_trace()
         assert len(keys) == 1
         rows = data[keys[0]]
         AssetCount = sum([item['AssetCount'] for item in rows])
