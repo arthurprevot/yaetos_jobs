@@ -10,8 +10,8 @@ import requests
 class Job(ETL_Base):
     def transform(self):
         # Code in pandas so limited in output size.
-        countries = 'ESP'
-        continents = None
+        countries = None  # DON'T USE, pb with API outputing AssetCount=0
+        continents = 'Oceania'
         years = ['2020', '2021', '2022', '2023', '2024', '2025']
         AssetCount, __ = self.get_assets_size(countries=countries, continents=continents)
         assets_per_page = 500
@@ -19,7 +19,7 @@ class Job(ETL_Base):
         self.logger.info(f"About to pull data for {AssetCount} assets, in {number_pages} api calls, with {assets_per_page} assets per call.")
         all_rows = []
         offset = 0
-        for ii in range(3):
+        for ii in range(number_pages):
             for year in years:
                 rows = self.get_assets(countries=countries, continents=continents, year=year, limit=assets_per_page, offset=offset)
                 offset += assets_per_page
