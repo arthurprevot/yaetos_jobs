@@ -11,32 +11,35 @@ class Job(ETL_Base):
     def transform(self):
         # Code in pandas so limited in output size.
         countries = 'ESP'
-        continent = 'Europe'
-        AssetCount, Emissions = self.get_assets_size(countries=countries, continent=continent)
+        continents = None
+        years = ['2020', '2021', '2022', '2023', '2024', '2025']
+        AssetCount, __ = self.get_assets_size(countries=countries, continents=continents)
         assets_per_page = 500
         number_pages = AssetCount // assets_per_page + 1
         self.logger.info(f"About to pull data for {AssetCount} assets, in {number_pages} api calls, with {assets_per_page} assets per call.")
         all_rows = []
         offset = 0
-        for ii in range(10):
-            rows = self.get_assets(countries=countries, continent=continent, limit=assets_per_page, offset=offset)
-            offset += assets_per_page
-            all_rows += rows
+        for ii in range(3):
+            for year in years:
+                rows = self.get_assets(countries=countries, continents=continents, year=year, limit=assets_per_page, offset=offset)
+                offset += assets_per_page
+                all_rows += rows
         df = pd.DataFrame(all_rows)
         return df
 
-    def get_assets(self, countries=None, continent=None, limit=None, offset=None):
+    def get_assets(self, countries=None, continents=None, year=None, limit=None, offset=None):
         url = "https://api.climatetrace.org/v6/assets"
         args = '?'
         args += f'countries={countries}&' if countries else ''
-        args += f'continents={continent}&' if continent else ''
+        args += f'continents={continents}&' if continents else ''
+        args += f'year={year}&' if year else ''
         args += f'limit={limit}&' if limit else ''
         args += f'offset={offset}&' if offset else ''
         # Note: tested sectors, subsectors and year params but they didn't work
         url += args
         get_table = lambda data: data['assets']
         __, ___, assets = self.api_pull(url, get_table)
-        assets = [asset | {'offset_batch': offset} for asset in assets]
+        assets = [asset | {'offset_batch': offset, 'year': year} for asset in assets]
         return assets
 
     def get_assets_size(self, countries=None, continents=None, limit=None):
@@ -49,9 +52,9 @@ class Job(ETL_Base):
         __, data, ___ = self.api_pull(url, dummy_size_fct)
         assert data is not None
         keys = list(data.keys())
+        # import ipdb; ipdb.set_trace()
         assert len(keys) == 1
         rows = data[keys[0]]
-        # import ipdb; ipdb.set_trace()
         AssetCount = sum([item['AssetCount'] for item in rows])
         Emissions = sum([item['Emissions'] for item in rows])  # TODO: make sure it can be sumed.
         return AssetCount, Emissions
