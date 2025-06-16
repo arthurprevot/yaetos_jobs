@@ -21,5 +21,5 @@ def map_emissions(cell_list):
 
 
 if __name__ == "__main__":
-    args = {'job_param_file': 'conf/jobs_metadata_bts_climate.yml'}
+    args = {'job_param_file': 'conf/jobs_metadata.yml'}
     Commandliner(Job, **args)
