@@ -1,12 +1,13 @@
 from yaetos.etl_utils import ETL_Base, Commandliner
+from pyspark.sql.functions import array, explode, lit
 
 
 class Job(ETL_Base):
     def transform(self, emissions):
-        df_duplicated = emissions
-        n = 25
-        for _ in range(n):
-            df_duplicated = df_duplicated.union(emissions)
+        n = 7000
+        df_duplicated = emissions.withColumn(
+            "replicate", explode(array([lit(1)] * n))
+        ).drop("replicate")        
         return df_duplicated
 
 
