@@ -10,8 +10,8 @@ import requests
 class Job(ETL_Base):
     def transform(self):
         # Code in pandas so limited in output size.
-        countries = None  # DON'T USE, pb with API outputing AssetCount=0
-        continents = 'Oceania'
+        countries = None  # don't change, leads to pb with API outputing AssetCount=0
+        continents = 'Oceania'  # start with 'Oceania', for more volume, change to "Europe"
         years = ['2020', '2021', '2022', '2023', '2024', '2025']
         AssetCount, __ = self.get_assets_size(countries=countries, continents=continents)
         assets_per_page = 500
