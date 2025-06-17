@@ -82,7 +82,7 @@ common_params:
       load_connectors: none
       enable_db_push: False
       save_schemas: False
-      manage_git_info: True
+      manage_git_info: False
     dev_local:
       root_path: '.'  # don't add '/' at the end
       base_path: '{{root_path}}/data'  # don't add '/' at the end
